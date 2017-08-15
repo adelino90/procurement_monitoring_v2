@@ -1,0 +1,30 @@
+body{
+	background:#F5F5F5;
+}
+.ebulletin-dashboard-options,.ebulletin-dashboard-list{
+background:#FFFFFF;
+border-radius: 10px;
+padding:10px 30px 10px 30px;
+}
+.modal-header{
+	background:#F5F5F5;
+}
+.ebulletin-dashboard-edit:hover{
+color:#42f4f4;
+}
+.ebulletin-dashboard-table td:nth-child(4){
+	width:20%;
+	padding-left:20px;
+}
+.ebulletin-dashboard-delete:hover{
+	color:#EB7990;
+}
+.ebulletin-dashboard-list{	
+margin-top:10px;
+}
+.ebulletin-dashboard-options-right{
+float:right;
+}
+.ebulletin-dashboard-options-left{
+float:left;
+}
