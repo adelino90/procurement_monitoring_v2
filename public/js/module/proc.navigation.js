@@ -6,16 +6,13 @@ proc.nav = (function () {
       main_html : String() + Handlebars.templates.navigation({}),
 
 	 settable_map : {
-		account_model:true,
         menu_model        : true,
         set_option_anchor : true,
-        user_model        :true,
         $container:true
       },
-	  account_model		: null,
+
       menu_model        : null,
       set_option_anchor : null,
-      user_model        : null,
       $container :null
     },
     stateMap  = {
@@ -31,16 +28,18 @@ proc.nav = (function () {
    setJqueryMap = function () {
     var
       $append_target = stateMap.$append_target,
-      $nav           = $append_target.find( '#proc_navigation' ),
+      $nav           =stateMap.$append_target.find( '#procurement_menu' ),
     jqueryMap = {
-    $nav      : $nav,
+      $container:stateMap.$append_target,
+      $nav      : $nav,
+      $links : $nav.find("#side-menu"),
       $window   : $(window)
     };
   };
 	
 	
   configModule = function ( input_map ) {
-    ebulletin.util.setConfigMap({
+    proc.util.setConfigMap({
       input_map    : input_map,
       settable_map : configMap.settable_map,
       config_map   : configMap
@@ -49,40 +48,26 @@ proc.nav = (function () {
   };
 
   helper = function(){
-
-    Handlebars.registerHelper('list', function(items, options) {
-      var out = '';
-      for(var i=0, l=items.length; i<l; i++) {
-        out = out +'<li class="ebulletin-dropdown-li" data-id="'+items[i].option+'"><a>'+items[i].nCaption+'</a></li>';
-      }
-      
-      return out;
-    });
   }
 
 
 
   
-  set_navigation = function(){
+set_navigation = function(){
 	  	
  jqueryMap.$append_target.html(Handlebars.templates.navigation());
 	  
-  }
+}
 
-	/*
+
   onTapMenu = function (event) {
       var option;
     try {  
 		option = $(this).attr('data-id')
-				 $(this).siblings().removeClass('active');
-         jqueryMap.$options.children().removeClass('active');
-         jqueryMap.$right_options_li.children().removeClass('active');
-				 $(this).parent().parent().removeClass('open');
-		 $(this).addClass('active');
 	
-				configMap.set_option_anchor(option,'ebulletin',( ( new Date() ).getSeconds() + 10000 ).toString( 36 ));
+				configMap.set_option_anchor(option,'procurement',( ( new Date() ).getSeconds() + 10000 ).toString( 36 ));
 	
-			
+	
 		
 		
     }
@@ -91,15 +76,21 @@ proc.nav = (function () {
     }
  
     return false; 
-  };*/
+  };
 	
    initModule = function ( $append_target ) {
     helper();//set handlebars helper
     // load nav html and jquery cache
     stateMap.$append_target = $append_target;
-    console.log( $append_target)
-    $append_target.html( Handlebars.templates.navigation({}));
-    setJqueryMap();
+
+    configMap.menu_model.get_nav(function(response){
+          $append_target.html( Handlebars.templates.navigation(response));
+              setJqueryMap();
+        
+              $append_target.find("#side-menu").children().click(onTapMenu);
+    })
+  
+
   	//set_navigation();
 
   

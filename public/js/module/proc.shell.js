@@ -17,7 +17,7 @@ configMap = {
 	anchor_schema_map : {
 	chat : { opened : true, closed : true , hidden:true },
 	bclick:{click:true},
-	option:{home:true,contact:true,dashboard:true,sign_out:true,manage_posts:true,view_post:true,manage_users:true,view_user:true},
+	option:{dashboard:true,monitoring:true},
 	 _option : {id : true},
 	 filter:{search:true},
 	 _filter :{search_str:true}
@@ -44,10 +44,9 @@ setJqueryMap = function () {
     var $wrapper = $container.find('.proc_wraper')
 	jqueryMap = { $container : $container,
 	//$main : $container.find('.spa-shell-main'),
-	 $content   : $container.find('.proc-content'),	
+	 $content   : $container.find('.proc_content'),	
 	$nav : $container.find('#proc_navigation')
     };
-console.log(jqueryMap);
 };
 // End DOM method /setJqueryMap/
 // Begin DOM method /toggleChat/
@@ -158,9 +157,13 @@ onHashchange = function ( event ) {
 	{
 			s_option_proposed = anchor_map_proposed.option;
 		switch(s_option_proposed){
-			case "index":
-				alert("Index!!")
+			case "dashboard":
+				jqueryMap.$content.off().empty()
 			break;
+			case "monitoring":
+				jqueryMap.$content.off().empty()
+			break;
+			
 		    default :
 				delete anchor_map_proposed.option;
 				delete anchor_map_proposed.chat;
@@ -275,8 +278,13 @@ initModule = function ( $container ) {
 	// configure uriAnchor to use our schema
 	$.uriAnchor.configModule({
 	schema_map : configMap.anchor_schema_map
+	});
+
+	proc.nav.configModule({
+	  set_option_anchor : setOptionAnchor,
+	  $container :jqueryMap.$nav,
+	  menu_model : proc.model.navigation
     });
-console.log(proc.nav);
     proc.nav.initModule(jqueryMap.$nav);
 
 
