@@ -15,18 +15,20 @@ proc.shell = (function () {
 var 
 configMap = {
 	anchor_schema_map : {
-	chat : { opened : true, closed : true , hidden:true },
-	bclick:{click:true},
 	option:{dashboard:true,monitoring:true},
-	 _option : {id : true},
-	 filter:{search:true},
-	 _filter :{search_str:true}
+	datef:{from:true},
+	_datef:{id:true},
+	datet:{to:true},
+	_datet:{id:true},
+	_option : {id : true},
+	filter:{search:true},
+	_filter :{search_str:true}
 	},resize_interval : 200,
 	main_html : String() + Handlebars.templates.content({})
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined},
 jqueryMap = {},
-initModule,copyAnchorMap,setJqueryMap, changeAnchorPart, onHashchange, setOptionAnchor;
+initModule,copyAnchorMap,setJqueryMap, changeAnchorPart, onHashchange, setOptionAnchor,setfilterOptionAnchor;
 //----------------- END MODULE SCOPE VARIABLES ---------------
 //-------------------- BEGIN UTILITY METHODS -----------------
 //--------------------- END UTILITY METHODS ------------------
@@ -158,10 +160,11 @@ onHashchange = function ( event ) {
 			s_option_proposed = anchor_map_proposed.option;
 		switch(s_option_proposed){
 			case "dashboard":
-				jqueryMap.$content.off().empty()
+				proc.dashboard.initModule( jqueryMap.$content );
 			break;
 			case "monitoring":
-				jqueryMap.$content.off().empty()
+			// /console.log(anchor_map_proposed);
+				proc.monitoring.initModule( jqueryMap.$content,anchor_map_proposed._option.id,anchor_map_proposed._option.id2,anchor_map_proposed._option.id3);
 			break;
 			
 		    default :
@@ -234,9 +237,10 @@ onHashchange = function ( event ) {
 // Throws : none
 //
 
-  setOptionAnchor = function ( option, id, id2 ) {
-    return changeAnchorPart({ option : option, _option : { id : id, id2 : id2 } });
+  setOptionAnchor = function ( option, id, id2, id3) {
+    return changeAnchorPart({ option : option, _option : { id : id, id2 : id2 ,id3 : id3} });
   };
+
 
 // End callback method /setChatAnchor/
 //----------------------- END CALLBACKS ----------------------
@@ -280,6 +284,13 @@ initModule = function ( $container ) {
 	schema_map : configMap.anchor_schema_map
 	});
 
+	proc.monitoring.configModule({
+	  change_option_anchor:setOptionAnchor
+	});
+	proc.monitoring.configModule({
+	  change_option_anchor:setOptionAnchor,
+		 proc_model : proc.model.monitoring
+    });
 	proc.nav.configModule({
 	  set_option_anchor : setOptionAnchor,
 	  $container :jqueryMap.$nav,
@@ -296,7 +307,7 @@ initModule = function ( $container ) {
 	// the trigger event, which is used to ensure the anchor
 	// is considered on-load
 	//
-	
+
 	$(window)
 		.bind( 'hashchange', onHashchange )
 		.trigger( 'hashchange' );

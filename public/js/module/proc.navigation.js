@@ -27,14 +27,12 @@ proc.nav = (function () {
 	
    setJqueryMap = function () {
     var
-      $append_target = stateMap.$append_target,
-      $nav           =stateMap.$append_target.find( '#procurement_menu' ),
-    jqueryMap = {
-      $container:stateMap.$append_target,
-      $nav      : $nav,
-      $links : $nav.find("#side-menu"),
-      $window   : $(window)
-    };
+      $append_target = stateMap.$append_target
+      jqueryMap = {
+        $container : stateMap.$append_target,
+        $nav      :   $append_target.find("#side-menu"),
+        $window   : $(window)
+      };
   };
 	
 	
@@ -67,8 +65,10 @@ set_navigation = function(){
 	
 				configMap.set_option_anchor(option,'procurement',( ( new Date() ).getSeconds() + 10000 ).toString( 36 ));
 	
-	
-		
+      if(option=='monitoring')
+        $("#page-wrapper").css({ 'width' : '3500px' });
+      else 
+        $("#page-wrapper").css({ 'width' : ''});
 		
     }
     catch ( error ) {
@@ -86,8 +86,8 @@ set_navigation = function(){
     configMap.menu_model.get_nav(function(response){
           $append_target.html( Handlebars.templates.navigation(response));
               setJqueryMap();
-        
-              $append_target.find("#side-menu").children().click(onTapMenu);
+              jqueryMap.$nav.children().click(onTapMenu);
+              
     })
   
 

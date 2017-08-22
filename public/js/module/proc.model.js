@@ -1,6 +1,6 @@
 proc.model = (function () {
   'use strict';
-  var curryFetchData,curryStoreData,navigation;
+  var curryFetchData,curryStoreData,navigation, monitoring;
   
   
   
@@ -41,7 +41,25 @@ navigation = (function(){
 
    }());
 
+monitoring  = (function(){
+  
+   var get_proc,get_filter_proc,view_proc,generate;
+
+     get_proc = curryFetchData("/get_procurement");
+     get_filter_proc = curryStoreData("/filter_proc");
+     view_proc  = curryStoreData("/view_procurement");
+     generate  = curryStoreData("/generate_excel");
     return {
-    navigation : navigation
+    get_proc : get_proc,
+    get_filter_proc:get_filter_proc,
+    view_proc  : view_proc,
+    generate    : generate
+    }
+
+}());
+
+    return {
+    navigation : navigation,
+    monitoring : monitoring
   };
   }());

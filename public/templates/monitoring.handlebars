@@ -1,0 +1,343 @@
+<div class ="row">
+    <div class="col-lg-12">
+        <h4>Procurement Monitoring </h4> 
+                    
+    </div>
+
+    <div class ="col-md-12">
+        <div class="page-header">
+
+                
+                <h5 class="header_title text-left">Procurement Monitoring Report for the period <span class="blue" id="from" title="select a date" data-toggle="modal" data-target="#date_picker">{{datefrom}}</span> to <span class="blue" id="to" data-toggle="modal" data-target="#date_picker" title="select a date">{{dateto}}</span>  </h5>
+        </div>
+    </div>
+    <div class="col-md-12">
+         <button type="button" class="btn btn-info" id ="procurement_add"><i class="fa fa-plus-square"></i> ADD</button>
+             <button  class="btn btn-success" id="generate"><i class="fa fa-file-excel-o"></i> Generate Report</button>
+             <input type="text" id="search" placeholder="Search">
+    </div>
+
+  <div id="date_modal" class="modal">
+    <div class="modal-dialog modal-sm">
+    
+
+      <div class="modal-content">
+      
+          
+       
+        <div class="modal-body">
+        <div class="row">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <h4 class="modal-title">Select Date</h4>
+            <div class="col-md-12 form-group form-inline">
+                  <label for="email">Date	:</label>
+                  <input class="datepicker form-control" id="input_date"  data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                   
+              </div>
+              <button type="button" id="date_save" class="btn btn-info" data-id="0" data-dismiss="modal">Save</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+
+        </div>
+
+      </div>
+      
+    </div>
+  </div>
+
+
+
+    <!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+	
+  <div class="modal-content">
+      <div class = "modal-header">
+		<span class="close">&times;</span>
+	 </div>
+			     <div class = "row">
+        
+              <div class="col-md-6">
+                <div class="overlay">
+                  
+                </div>
+                  <div class="form-group">
+                      <label>Procurement Type:</label>
+                    <select class="form-control" id="ptype">
+                     
+                                <option disabled selected value> -- select an option -- </option>
+                                {{#each ptype}}
+                                    <option value = "{{id}}">{{description}}</option>
+                                {{/each}} 
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Code (PAP)	:</label>
+                    <input type="text" class="form-control" id="code_PAP" >
+                  </div>
+                  <div class="form-group">
+                    <label>PR #:</label>
+                    <input type="text" class="form-control" id="pr_no"  >
+                  </div>
+                  <div class="form-group">
+                    <label>PO/JO #:</label>
+                    <input type="text" class="form-control" id="PO_JO" >
+                  </div>
+                  <div class="form-group">
+                    <label>Procurement Program/Project:</label>
+                    <textarea class="form-control" rows="5" id="program_proj_name"></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label>Mode of Procurement:</label>
+                    <select class="form-control" id="mode">
+            
+                               <option disabled selected value> -- select an option -- </option>
+                         {{#each modes}}
+                                    <option value = "{{MOP_id}}">{{MOP_Description}}</option>
+                         {{/each}} 
+                    </select>
+                  </div>
+
+
+                  <div class="form-group">
+                    <label>PMO/End-User:</label>
+                    <input type="text" class="form-control" id="end_user">
+                  </div>
+                  <div class="col-md-12 border">
+                      <p class="thick">Actual Procurement Activity</p>
+                        <div class="col-md-6  form-group">
+                          <label>Pre-Proc Conferenc:</label>
+                          <input class="datepicker form-control" id="pre_Proc" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Ads/Post of IAEB:</label>
+                          <input class="datepicker form-control" id="ads_post_IAEB"  data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                            <label>Pre-bid Conf:</label>
+                            <input class="datepicker form-control" id="Pre_bid" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                            <label>Eligibility Check:</label>
+                            <input class="datepicker form-control" id="Eligibility_Check" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Sub/Open of Bids:</label>
+                          <input class="datepicker form-control" id="oob" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Bid Evaluation:</label>
+                          <input class="datepicker form-control" id="Bid_Eval" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Post Qual:</label>
+                          <input class="datepicker form-control" id="Post_Qual" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Notice of Award:</label>
+                          <input class="datepicker form-control" id="Notice_of_Award" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Contract Signing:</label>
+                          <input class="datepicker form-control" id="Contract_Signing" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Notice to Proceed:</label>
+                          <input class="datepicker form-control" id="Notice_To_Proceed"  data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Delivery/ Completion:</label>
+                          <input class="datepicker form-control" id="Del_Completion" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="col-md-6  form-group">
+                          <label>Acceptance/ Turnover	:</label>
+                          <input class="datepicker form-control" id="Acceptance_date" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                        </div>
+                         
+                  </div>  
+              </div>
+              <div class="col-md-6">
+                 <div class="overlay">
+                  
+                </div>
+                <div class="form-group">
+                    <label>Source of Funds:</label>
+                   <select class="form-control" id="fund">
+                               <option disabled selected value> -- select an option -- </option>
+                               {{#each source_of_fund}}
+                                    <option value = "{{fund_ID}}">{{Fund_Name}}</option>
+                         {{/each}}      
+                    </select>
+                </div>  
+
+                   <div class="col-md-12 border">
+                      <p class="thick">ABC(PhP)</p>
+                      <div class="col-md-3 form-group">
+                        <label>Total:</label>
+                        <input type="number" class="form-control" id="ABC">
+                      </div>
+                      <div class="col-md-3 form-group">
+                        <label>MOOE:</label>
+                        <input type="number" class="form-control copy_ABC" id="ABC_MOOE">
+                      </div>
+                      <div class="col-md-3 form-group">
+                        <label>	CO:</label>
+                        <input type="number" class="form-control copy_ABC" id="ABC_CO">
+                      </div>
+                      <div class="col-md-3 form-group">
+                        <label>	Others:</label>
+                        <input type="number" class="form-control copy_ABC" id="ABC_Others">
+                      </div>
+                   </div>
+
+                   <div class="col-md-12 border">
+                      <p class="thick">Contract Cost(PhP)</p>
+                      <div class="col-md-3 form-group">
+                        <label>Total:</label>
+                        <input type="number" class="form-control" id="Contract_Cost">
+                      </div>
+                      <div class="col-md-3 form-group">
+                        <label>MOOE:</label>
+                        <input type="number" class="form-control copy_concost" id="Contract_Cost_MOOE">
+                      </div>
+                      <div class="col-md-3 form-group">
+                        <label>	CO:</label>
+                        <input type="number" class="form-control copy_concost" id="Contract_Cost_CO">
+                      </div>
+                      <div class="col-md-3 form-group">
+                        <label>	Others:</label>
+                        <input type="number" class="form-control copy_concost" id="Contract_Cost_Others">
+                      </div>
+                   </div>
+                   <div class="form-group">
+                    <label>List of Invited Observers:</label>
+                    <textarea class="form-control" rows="5" id="Invited_Observers"></textarea>
+                  </div>
+
+                  <div class="col-md-12 border">
+                    <p class="thick">Date of Receipt of Invitation</p>
+                    <div class="col-md-6  form-group">
+                          <label>Pre-Proc Conferenc:</label>
+                          <input class="datepicker form-control" id="DRP_Pre_Proc_conf" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                    </div>
+                     <div class="col-md-6  form-group">
+                        <label>Pre-bid Conf:</label>
+                        <input class="datepicker form-control" id="DRP_Pre_Bid_conf" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                     </div>
+                     <div class="col-md-6  form-group">
+                        <label>Eligibility Check:</label>
+                        <input class="datepicker form-control" id="DRP_Eligibility_check " data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                     </div>
+                     <div class="col-md-6  form-group">
+                      <label>Sub/Open of Bids:</label>
+                      <input class="datepicker form-control" id="DRP_OOP"  data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                     </div>
+
+                     <div class="col-md-6  form-group">
+                        <label>Bid Evaluation:</label>
+                        <input class="datepicker form-control" id="DRP_Bid_Eval" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                     </div>
+                     <div class="col-md-6  form-group">
+                       <label>Post Qual:</label>
+                       <input class="datepicker form-control" id="DRP_Post_Qual" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                     </div>
+                     <div class="col-md-6  form-group">
+                       <label>Notice of Award:</label>
+                        <input class="datepicker form-control" id="DRP_Notice_of_Award" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                      </div>
+                      <div class="col-md-6  form-group">
+                        <label>Contract Signing:</label>
+                        <input class="datepicker form-control" id="DRP_Contract_Signing" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                      </div>
+                      <div class="col-md-6  form-group">
+                          <label>Delivery/ Completion:</label>
+                          <input class="datepicker form-control" id="DRP_Delivery_Accept" data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                      </div>
+
+                     
+                  </div> 
+                  <div class="form-group">
+                    <label>Remarks:</label>
+                    <textarea class="form-control" rows="5" id="Remarks">  </textarea>
+                  </div>
+                  <button type="button" class="btn btn-info col-md-6" id = "procurement_save" >Save</button>
+				  <button type="button" class="btn btn-info col-md-6 btn-warning" id = "procurement_cancel">Cancel</button>
+					 
+              </div>
+             
+     </div>
+  </div>
+
+</div>
+
+
+
+</div>
+<div class="pane-hScroll">
+
+
+                <table class="" id = "header_table">
+                    <thead>
+                     <tr>
+                        <th rowspan="2" class = "cells header small_width">Code (PAP)</th>
+                        <th rowspan="2" class = "cells header small_width">PR #</th> 
+                        <th rowspan="2" class = "cells header small_width">PO/JO #</th>
+                        <th rowspan="2" class = "cells header program_name no-pads">Procurement Program/Project</th>
+                        <th rowspan="2" class = "cells header data_cell">PMO/<br>End-User</th>
+                        <th rowspan="2" class = "cells header data_cell">Mode of<br>Procurement</th>
+                        <th colspan="12" rowspan="1" class = "cells header" style="width:360px">Actual Procurement Activity</th>
+                        <th rowspan="2" class = "cells header data_cell">Source of Funds</th>
+                        <th colspan="4" rowspan="1" class = "cells header" style="width:120px">ABC (PhP)</th>
+                        <th colspan="4" rowspan="1" class = "cells header" style="width:120px">Contract Cost(PhP)</th>
+                        <th rowspan="2" class = "cells header data_cell">List of Invited<br> Observers</th>
+                        <th colspan="9" rowspan="1" class = "cells header" style="width:270px">Date of Receipt of Invitation</th>
+                        <th rowspan="2" class = "cells header data_cell">Remarks<br>(Explaining changes from the APP)</th>
+                    </tr>
+                  
+                    <tr>
+                        <th rowspan="1" class = "cells header data_cell">Pre-Proc<br>Conferenc</th>
+                        <th rowspan="1" class = "cells header data_cell">Ads/Post<br> of IAEB</th>
+                        <th rowspan="1" class = "cells header data_cell">Pre-bid Conf</th>
+                        <th rowspan="1" class = "cells header data_cell">Eligibility Check</th>
+                        <th rowspan="1" class = "cells header data_cell">Sub/Open of Bids</th>
+                        <th rowspan="1" class = "cells header data_cell">Bid Evaluation</th>
+                        <th rowspan="1" class = "cells header data_cell">Post Qual</th>
+                        <th rowspan="1" class = "cells header data_cell">Notice of Award</th>
+                        <th rowspan="1" class = "cells header data_cell">Contract Signing</th>
+                        <th rowspan="1" class = "cells header data_cell">Notice to Proceed</th>
+                        <th rowspan="1" class = "cells header data_cell">Delivery/ Completion</th>
+                        <th rowspan="1" class = "cells header data_cell">Acceptance/ Turnover</th>
+                        
+                        
+                        <th rowspan="1" class = "cells header data_cell">Total</th>
+                        <th rowspan="1" class = "cells header data_cell">MOOE</th>
+                        <th rowspan="1" class = "cells header data_cell">CO</th>
+                        <th rowspan="1" class = "cells header data_cell">Others</th>
+                        <th rowspan="1" class = "cells header data_cell">Total</th>
+                        <th rowspan="1" class = "cells header data_cell">MOOE</th>
+                        <th rowspan="1" class = "cells header data_cell">CO</th>
+                        <th rowspan="1" class = "cells header data_cell">Others</th>
+                        
+                        <th rowspan="1" class = "cells header data_cell">Pre-Proc Conf</th>
+                        <th rowspan="1" class = "cells header data_cell">Pre-bid Conf</th>
+                        <th rowspan="1" class = "cells header data_cell">Eligibility Check</th>
+                        <th rowspan="1" class = "cells header data_cell">Sub/Open of Bids</th>
+                        <th rowspan="1" class = "cells header data_cell">Bid Evaluation</th>
+                        <th rowspan="1" class = "cells header data_cell">Post Qual</th>
+                        <th rowspan="1" class = "cells header data_cell">Notice of Award</th>
+                        <th rowspan="1" class = "cells header data_cell">Contract Signing</th>
+                        <th rowspan="1" class = "cells header data_cell">Delivery/ Accept</th>
+                    </tr>
+                    </thead>   
+    </table>
+
+    <div class="pane-vScroll">
+      
+      <table id = "record_table">
+                  <tbody>
+                        {{{html}}}
+                    
+                    </tbody>
+          </table>
+        </div>

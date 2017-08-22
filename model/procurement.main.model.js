@@ -11,8 +11,8 @@ gpool.connect(err => {
 get_navigation = function(callback){
 
     	var menu = {navigation:[
-            {bEnabled:true,bGranted:true,bVisible:true,nCaption:"Dashboard",nId:1,option:"dashboard"},
-            {bEnabled:true,bGranted:true,bVisible:true,nCaption:"Monitoring",nId:2,option:"monitoring"},
+            {bEnabled:true,bGranted:true,bVisible:true,nCaption:"Dashboard",nId:1,option:"dashboard",icon : "fa fa-dashboard fa-fw"},
+            {bEnabled:true,bGranted:true,bVisible:true,nCaption:"Monitoring",nId:2,option:"monitoring",icon : "fa fa-table"},
 			]};
             callback(menu);
 }

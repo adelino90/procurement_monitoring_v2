@@ -1,30 +1,115 @@
-body{
-	background:#F5F5F5;
+.cells{
+    border:1px solid #ddd;
+    font-size: 12px;
+    text-align: center;
+   
 }
-.ebulletin-dashboard-options,.ebulletin-dashboard-list{
-background:#FFFFFF;
-border-radius: 10px;
-padding:10px 30px 10px 30px;
+.cellsh{
+
 }
-.modal-header{
-	background:#F5F5F5;
+#header-fixed{
+    position: fixed;
+    top: 0px; display:none;
+    background-color:white;
+    
 }
-.ebulletin-dashboard-edit:hover{
-color:#42f4f4;
+.row-hover:hover{
+background: #FFFFCC;
+cursor:pointer;
+font-weight: bold;
 }
-.ebulletin-dashboard-table td:nth-child(4){
-	width:20%;
-	padding-left:20px;
+.cell_hover{
+    background: #FFFFCC;
+    font-weight: bold;
 }
-.ebulletin-dashboard-delete:hover{
-	color:#EB7990;
+
+.no-pads{
+    margin:0;
 }
-.ebulletin-dashboard-list{	
-margin-top:10px;
+
+.header_title{
 }
-.ebulletin-dashboard-options-right{
-float:right;
+
+.data_cell{
+    width:30px;
+    
+    text-align: center;
 }
-.ebulletin-dashboard-options-left{
-float:left;
+
+table {
+   
+  border-collapse: collapse;
+  background: white;
+  table-layout: fixed;
+   width: 3400px;
+}
+thead{
+    border: 1px solid #ddd;
+}
+th, td {
+
+  border: 1px solid #ddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+
+.pane {
+  background: #eee;
+}
+.pane-hScroll {
+  overflow: auto;
+  width: 3400px;
+   background: #eee;
+}
+
+.pane-vScroll {
+  
+  overflow-y: auto;
+  overflow-x: hidden;
+  height:800px;
+  background: white;
+    direction: rtl;
+
+}
+.pane-vScroll > table {
+    direction: ltr;
+}
+.program_name{
+    width: 200px;
+    min-height: 140px;
+}
+.small_width{
+    width: 20px;
+}
+
+#search {
+    width: 230px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('searchicon.png');
+    background-position: 10px 10px; 
+    background-repeat: no-repeat;
+    padding: 3px 0px 6px 4px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+.divider{
+     width: 3400px;
+
+}
+
+.procurement_links{
+    cursor: pointer;
+}
+#from,#to{
+    cursor: pointer;
+    color:blue
+}
+
+#from:hover,#to:hover{
+    font-weight: bold;
 }
