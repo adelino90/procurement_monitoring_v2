@@ -632,7 +632,7 @@ excel_data = function(inputd,callback){
                                 else if(result && result2)      
                                 alldata = result.recordset.concat(result2.recordset);
 
-                                     console.log(result2.recordset)
+                                     //console.log(result2.recordset)
                                 callback(alldata)
                         
                         

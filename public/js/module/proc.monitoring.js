@@ -83,8 +83,8 @@ data_filter = function(date_from,date_to,search_str){
     configMap.proc_model.get_filter_proc(filter_data,function(data){
         jqueryMap.$record_table.find('tbody').html(data.html)
         setJqueryMap();
-        setEvents();
-        configMap.change_option_anchor('monitoring',date_from, date_to,search_str );
+        setEvents(date_from,date_to,search_str);
+        
       
     })
 }
@@ -247,16 +247,18 @@ setEvents = function(from,to,search_str){
          if(filtertype=="from" && temp_date != "Invalid date"){
           
           var to = new Date(jqueryMap.$to.text()); 
-          data_filter(moment(temp_date).format('L'),moment(to).format('L'),search_str)
-          jqueryMap.$from.text(temp_date);
-
+          //data_filter(moment(temp_date).format('L'),moment(to).format('L'),search_str)
+          //
+            configMap.change_option_anchor('monitoring',moment(temp_date).format('L'), moment(to).format('L'),search_str );
+            jqueryMap.$from.text(temp_date);
         }
         else if(filtertype == "to" && temp_date != "Invalid date"){
 
            var from = new Date($("#from").text()); 
-           data_filter(moment(from).format('L'),moment(temp_date).format('L'),search_str)
+           //data_filter(moment(from).format('L'),moment(temp_date).format('L'),search_str)
+           
+           configMap.change_option_anchor('monitoring',moment(from).format('L'), moment(temp_date).format('L'),search_str );
            jqueryMap.$to.text(temp_date); 
-
         }
         jqueryMap.$date_modal.css("display","none");
     });
@@ -272,7 +274,8 @@ setEvents = function(from,to,search_str){
             from = moment(from).format('L')
             to = moment(to).format('L')
             if(from!="Invalid date" && to !="Invalid date")
-             data_filter(from,to,search_str);
+             //data_filter(from,to,search_str);
+             configMap.change_option_anchor('monitoring',from,to,search_str );
             else alert("Invalid Date")
         }
     });
@@ -288,27 +291,32 @@ setEvents = function(from,to,search_str){
     });
     return true;
 };
+
+
+
 helper = function(){
 
-  }
+}
 
-setcontent = function(from,to,search_str){
+setcontent = function(from,to,search_str,$container){
 
         $("#page-wrapper").css({ 'width' : '3500px' });
         configMap.proc_model.get_proc(function(data){
+                stateMap.$container.html(Handlebars.templates.monitoring())
+                    var from_Text = new Date(from);
+                    var to_Text = new Date(to);
+                    
 
-        
-                stateMap.$container.html(Handlebars.templates.monitoring({html:data.html,datefrom:data.datefrom,dateto:data.dateto,ptype:data.ptype,source_of_fund:data.source_of_fund,modes:data.modes}))
-                setJqueryMap();
-                setEvents(from,to,search_str);
-                if(from!="procurement"){
-                      var from_Text = new Date(from);
-                      var to_Text = new Date(to);
-                      jqueryMap.$from.text(moment(from_Text).format('LL'));
-                         jqueryMap.$to.text(moment(to_Text).format('LL'));
-                         jqueryMap.$search.val(search_str);
-                     data_filter(from,to,search_str)
-                }
+                    jqueryMap.$search.val(search_str);
+                    $container.off().empty();
+                    stateMap.$container = $container;
+                    stateMap.$container.html(Handlebars.templates.monitoring({ptype:data.ptype,source_of_fund:data.source_of_fund,modes:data.modes}));
+                    setJqueryMap();
+                    jqueryMap.$search.val(search_str);  
+                    jqueryMap.$from.text(moment(from_Text).format('LL'));
+                    jqueryMap.$to.text(moment(to_Text).format('LL'));
+                    data_filter(from,to,search_str)
+               
              })
     
          
@@ -318,12 +326,35 @@ setcontent = function(from,to,search_str){
 
 
 initModule = function ( $container,from,to,search_str ) {
-  
-	stateMap.$container = $container;
-	stateMap.$container.off().empty();
+    stateMap.$container = $container;
+    var temp_from = from;
+    var dates = getDate();
+    search_str = (search_str=='undefined' ? '' :search_str)
+    from = (from == 'procurement' ? dates[0] :from)
+    to   = (temp_from == 'procurement' ? dates[1] :to  )
+    setJqueryMap();
 
-	
-			setcontent(from,to,search_str);
+    
+    if(jqueryMap.$record_table.length==0){
+        setcontent(from,to,search_str,stateMap.$container)
+    }
+
+    else{
+        var from_Text = new Date(from);
+        var to_Text = new Date(to);
+        jqueryMap.$search.val(search_str);
+        jqueryMap.$search.val(search_str);  
+        jqueryMap.$from.text(moment(from_Text).format('LL'));
+        jqueryMap.$to.text(moment(to_Text).format('LL'));
+        data_filter(from,to,search_str)
+    }
+    //stateMap.$container = $container;
+	//stateMap.$container.off().empty();
+   
+   
+    //setcontent(from,to,search_str);
+
+    
 
 };
     return { initModule : initModule,configModule : configModule };
