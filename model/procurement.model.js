@@ -306,7 +306,7 @@ proc_data = function(callback){
               })
             
           
-			  })
+			})
            
 }
 
@@ -753,8 +753,8 @@ save_data = function(input_data,callback){
                else
                callback(err); 
           
-			  })
-     }
+			})
+}
 
 
           exports.proc_data = proc_data;
