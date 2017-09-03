@@ -289,7 +289,8 @@ initModule = function ( $container ) {
 	});
 	proc.monitoring.configModule({
 	  change_option_anchor:setOptionAnchor,
-		 proc_model : proc.model.monitoring
+	  proc_model : proc.model.monitoring,
+		keys : proc.field_keys.keys
     });
 	proc.nav.configModule({
 	  set_option_anchor : setOptionAnchor,

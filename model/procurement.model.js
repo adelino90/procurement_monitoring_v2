@@ -341,7 +341,24 @@ filter_proc_data = function(filter_data,callback){
             .input('from', sql.NVarChar, datefrom)
             .input('to', sql.NVarChar,  dateto)
             .execute('procurement_search', (err, result) => {
-              // ...      
+              // ...          
+              const request1 = new sql.Request(gpool)
+                .input('ptype', sql.Int, 1)
+                .input('from', sql.NVarChar, datefrom)
+                .input('to', sql.NVarChar, dateto)
+                .input('search_str', sql.NVarChar, search_str)
+                .execute('procurement_search', (err, result2) => {
+
+                  record_len2 = result2.recordset.length;
+                  data2 = result2.recordset;
+                   const request3 = new sql.Request(gpool)
+                        .input('from', sql.NVarChar, datefrom)
+                        .input('to', sql.NVarChar, dateto)
+                        .input('search_str', sql.NVarChar, search_str)
+                        .input('ptype', sql.Int, 2)
+                        .execute('get_total_ABC_CC', (err, result4) => {
+
+                          data4 = result4.recordset;
              record_len = result.recordset.length;
              data = result.recordset;
 
@@ -430,8 +447,48 @@ filter_proc_data = function(filter_data,callback){
                                 </tr>';
                             
               }
-
-                const request1 = new sql.Request(gpool)
+                      html = html+` <tr class = "row-hover procurement_data" id="total_pbid" data-id = "none">\
+                                      <td class = "cells small_width"></td>\
+                                      <td class = "cells small_width"></td>\
+                                      <td class = "cells small_width"></td> \
+                                      <td class = "cells program_name no-pads"></td>  \
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>  \
+                                      <td class = "cells data_cell"></td>  \
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td> \ 
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td> \ 
+                                      <td class = "cells data_cell"></td>  \
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"><b>SUB-TOTAL:</b></td>\
+                                      <td class = "cells data_cell">`+nullvalidation(data4[0].total_ABC)+`</td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"><b>SUB-TOTAL:</b></td>\
+                                      <td class = "cells data_cell">`+nullvalidation(data4[0].total_contract_cost)+`</td> \
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
+                                  </tr>`;  
+                                 
+                const request2 = new sql.Request(gpool)
                 .input('ptype', sql.Int, 1)
                 .input('from', sql.NVarChar, datefrom)
                 .input('to', sql.NVarChar, dateto)
@@ -536,7 +593,7 @@ filter_proc_data = function(filter_data,callback){
                                     html=' <tr class = "row-hover procurement_data" data-id = "none"><td class = "cells data_cell" colspan="38" style ="text-align: left;"><b>No Results Found</b></td><tr>'
                                    }      
 
-                                     html = html+` <tr class = "row-hover procurement_data" data-id = "none">\
+                                     html = html+` <tr class = "row-hover procurement_data" id="total_altmode" data-id = "none">\
                                       <td class = "cells small_width"></td>\
                                       <td class = "cells small_width"></td>\
                                       <td class = "cells small_width"></td> \
@@ -599,10 +656,12 @@ filter_proc_data = function(filter_data,callback){
 
                       })            
               })
-            
+             
           
 			  })
-           
+            }) 
+             }) 
+        
 }
 
 excel_data = function(inputd,callback){
@@ -646,10 +705,64 @@ excel_data = function(inputd,callback){
 }
 
 
-
+        save_data = function(input_data,callback){
+            var d = new Date();
+             var date_save = d.getMonth()+1 +'/'+d.getDay()+'/'+d.getFullYear();
+          sql.close();
+		      	 const request = new sql.Request(gpool)
+			.input('code_PAP', sql.NVarChar, input_data.code_PAP)
+			.input('pr_no', sql.NVarChar, input_data.pr_no)
+            .input('PO_JO', sql.NVarChar, input_data.PO_JO)
+            .input('program_proj_name', sql.NVarChar, input_data.program_proj_name)
+            .input('end_user', sql.NVarChar, input_data.end_user)
+            .input('MOP', sql.Int, parseInt(input_data.MOP))
+            .input('pre_Proc', sql.NVarChar,  convertDate(input_data.pre_Proc))
+            .input('ads_post_IAEB', sql.NVarChar,  convertDate(input_data.ads_post_IAEB))
+            .input('Pre_bid', sql.NVarChar,  convertDate(input_data.Pre_bid))
+            .input('Eligibility_Check', sql.NVarChar,  convertDate(input_data.Eligibility_Check))
+            .input('oob', sql.NVarChar,  convertDate(input_data.oob))
+            .input('Bid_Eval', sql.NVarChar,  convertDate(input_data.Bid_Eval))
+            .input('Post_Qual', sql.NVarChar,  convertDate(input_data.Post_Qual))
+            .input('Notice_of_Award', sql.NVarChar,  convertDate(input_data.Notice_of_Award))
+            .input('Contract_Signing', sql.NVarChar,  convertDate(input_data.Contract_Signing))
+            .input('Notice_To_Proceed', sql.NVarChar,  convertDate(input_data.Notice_To_Proceed))
+            .input('Del_Completion', sql.NVarChar,  convertDate(input_data.Del_Completion))
+            .input('Acceptance_date', sql.NVarChar,  convertDate(input_data.Acceptance_date))
+            .input('Source_of_Funds', sql.Int, input_data.Source_of_Funds)
+            .input('ABC', sql.Float,parseFloat(input_data.ABC))
+            .input('ABC_MOOE', sql.Float, parseFloat(input_data.ABC_MOOE))
+            .input('ABC_CO', sql.Float, parseFloat(input_data.ABC_CO))
+            .input('ABC_Others', sql.Float, parseFloat(input_data.ABC_Others))
+            .input('Contract_Cost', sql.Float, parseFloat(input_data.Contract_Cost))
+            .input('Contract_Cost_MOOE', sql.Float, parseFloat(input_data.Contract_Cost_MOOE))
+            .input('Contract_Cost_CO', sql.Float, parseFloat(input_data.Contract_Cost_CO))
+            .input('Contract_Cost_Others', sql.Float, parseFloat(input_data.Contract_Cost_Others))
+            .input('Invited_Observers', sql.NVarChar, input_data.Invited_Observers)
+            .input('DRP_Pre_Proc_conf', sql.NVarChar,  convertDate(input_data.DRP_Pre_Proc_conf))
+            .input('DRP_Pre_Bid_conf', sql.NVarChar,  convertDate(input_data.DRP_Pre_Bid_conf))
+            .input('DRP_Eligibility_check', sql.NVarChar,  convertDate(input_data.DRP_Eligibility_check))
+            .input('DRP_OOP', sql.NVarChar,  convertDate(input_data.DRP_OOP))
+            .input('DRP_Bid_Eval', sql.NVarChar,  convertDate(input_data.DRP_Bid_Eval))
+            .input('DRP_Post_Qual', sql.NVarChar,  convertDate(input_data.DRP_Post_Qual))
+            .input('DRP_Notice_of_Award', sql.NVarChar,  convertDate(input_data.DRP_Notice_of_Award))
+            .input('DRP_Contract_Signing', sql.NVarChar,  convertDate(input_data.DRP_Contract_Signing))
+            .input('DRP_Delivery_Accept', sql.NVarChar,  convertDate(input_data.DRP_Delivery_Accept))
+            .input('Remarks', sql.NVarChar, input_data.Remarks)
+            .input('date_today', sql.NVarChar, date_save)
+            .input('ptype', sql.Int, input_data.ptype)
+            .execute('insert_procurement', (err, result) => {
+			        // ... 
+              if(!err)
+                callback("OK!")
+               else
+               callback(err); 
+          
+			  })
+     }
 
 
           exports.proc_data = proc_data;
            exports.filter_proc_data = filter_proc_data;
            exports.procurement_details = procurement_details;
            exports.excel_data = excel_data;
+           exports.save_data  = save_data;

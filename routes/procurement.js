@@ -1,8 +1,9 @@
 var fs = require('fs');
- var XLSX = require('xlsx')
- var path = require('path')
+var XLSX = require('xlsx')
+var path = require('path')
 
 var model = require('../model/procurement.model');
+
 module.exports.controller = function(app) {
 
 app.get('/get_procurement', function(req, res, next) {
@@ -11,16 +12,15 @@ app.get('/get_procurement', function(req, res, next) {
         })
      });
 
-     app.post('/filter_proc', function(req, res, next) {
+app.post('/filter_proc', function(req, res, next) {
 
         var filterdata = {from:req.body.from,to:req.body.to,search_str:req.body.search_str}
         model.filter_proc_data(filterdata,function(data){
             res.send(data)
         })
-     });
+    });
 
-
-    app.post('/view_procurement',function(req,res,next){
+app.post('/view_procurement',function(req,res,next){
       
        var procurement_id = req.body.id
 		      model.procurement_details(procurement_id,function(data){
@@ -29,12 +29,18 @@ app.get('/get_procurement', function(req, res, next) {
      })
 
 app.get('/get_excel',function(req,res){
-    console.log(__dirname)
 
     res.sendFile(path.join(__dirname, '/../','public/test.xlsx'));
 })
+  app.post('/save',function(req,res,next){
+          alldata= req.body.idata
+          model.save_data(alldata,function(data){
+                if(data == "OK!")
+                    res.send("OK");
+          });
 
-    app.post('/generate_excel',function(req,res,next){
+  });
+app.post('/generate_excel',function(req,res,next){
        /* original data */
                 input = req.body
                 model.excel_data(input,function(data2){

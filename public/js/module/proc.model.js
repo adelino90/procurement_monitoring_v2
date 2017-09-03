@@ -43,17 +43,22 @@ navigation = (function(){
 
 monitoring  = (function(){
   
-   var get_proc,get_filter_proc,view_proc,generate;
-
+   var get_proc,get_filter_proc,view_proc,generate,add_proc,update_proc,save;
+     add_proc = curryStoreData("/add_proc");
+     update_proc = curryStoreData("/update_proc");
      get_proc = curryFetchData("/get_procurement");
      get_filter_proc = curryStoreData("/filter_proc");
      view_proc  = curryStoreData("/view_procurement");
      generate  = curryStoreData("/generate_excel");
+     save = curryStoreData("/save");
     return {
-    get_proc : get_proc,
-    get_filter_proc:get_filter_proc,
-    view_proc  : view_proc,
-    generate    : generate
+        get_proc : get_proc,
+        get_filter_proc:get_filter_proc,
+        view_proc  : view_proc,
+        generate    : generate,
+        add_proc   : add_proc,
+        update_proc  : update_proc,
+        save    :save 
     }
 
 }());

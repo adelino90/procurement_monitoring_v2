@@ -7,11 +7,12 @@ configMap = {
 
     change_option_anchor:null,
     proc_model : null,	
-    settable_map : {change_option_anchor:true, proc_model : true}
+    keys : null,
+    settable_map : {change_option_anchor:true, proc_model : true , keys:true}
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined ,procurement_model : undefined},
 jqueryMap = {},
-copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals, initModule;
+copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals, initModule;
 
 // Begin DOM method /setJqueryMap/
 setJqueryMap = function () {
@@ -32,7 +33,6 @@ setJqueryMap = function () {
             $date_input : $container.find("#input_date"),
             $search :   $container.find("#search"),
             $generate : $container.find("#generate"),
-
             $code_PAP : $modal.find('#code_PAP'),
 			$pr_no : $modal.find('#pr_no'),
 			$PO_JO  :$modal.find('#PO_JO'),
@@ -75,16 +75,28 @@ setJqueryMap = function () {
 		}
 };
 
+getVals = function(){
+    var idata = {}
+    var inputdata = {idata:idata}
+    for(var i=0;i < configMap.keys.length;i++){
+            //console.log($('#'+configMap.keys[i]).val());
+        idata[configMap.keys[i]] = $('#'+configMap.keys[i]).val()
+    }
+  configMap.proc_model.save(inputdata,function(data){
+       console.log(data)
+      
+    })
+}
 
 data_filter = function(date_from,date_to,search_str){
 
-
+    $(".overlay").show();
     var filter_data = {from:date_from,to:date_to,search_str:search_str}
     configMap.proc_model.get_filter_proc(filter_data,function(data){
         jqueryMap.$record_table.find('tbody').html(data.html)
         setJqueryMap();
         setEvents(date_from,date_to,search_str);
-        
+        $(".overlay").hide();
       
     })
 }
@@ -209,6 +221,7 @@ setEvents = function(from,to,search_str){
     })
     jqueryMap.$procurement_save.click(function(){
          $('#myModal').css("display","none");
+         getVals();
     })
     jqueryMap.$from.click(function(){
         jqueryMap.$date_modal.css("display","block");
@@ -244,7 +257,7 @@ setEvents = function(from,to,search_str){
         var filtertype = $(this).attr("data-id")
         var temp_date = new Date(date)
         temp_date = moment(temp_date).format('LL');   
-         if(filtertype=="from" && temp_date != "Invalid date"){
+        if(filtertype=="from" && temp_date != "Invalid date"){
           
           var to = new Date(jqueryMap.$to.text()); 
           //data_filter(moment(temp_date).format('L'),moment(to).format('L'),search_str)
@@ -263,7 +276,7 @@ setEvents = function(from,to,search_str){
         jqueryMap.$date_modal.css("display","none");
     });
 
-     jqueryMap.$search.keypress(function(e) {
+    jqueryMap.$search.keypress(function(e) {
   
         if(e.which == 13) {
             var search_str = jqueryMap.$search.val();
