@@ -76,12 +76,16 @@ setJqueryMap = function () {
 };
 
 getVals = function(){
-    var idata = {}
-    var inputdata = {idata:idata}
+    var idata = {};
+    var inputdata, save_date;
     for(var i=0;i < configMap.keys.length;i++){
             //console.log($('#'+configMap.keys[i]).val());
         idata[configMap.keys[i]] = $('#'+configMap.keys[i]).val()
     }
+    save_date =  jqueryMap.$from.text();
+    save_date = moment(save_date).format('L');
+    idata.save_date = save_date
+    inputdata = {idata:idata};
   configMap.proc_model.save(inputdata,function(data){
        console.log(data)
       
