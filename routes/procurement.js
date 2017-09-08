@@ -35,8 +35,8 @@ app.get('/get_excel',function(req,res){
   app.post('/save',function(req,res,next){
           alldata= req.body.idata
           model.save_data(alldata,function(data){
-                if(data == "OK!")
-                    res.send("OK");
+                if(data)
+                    res.send(data);
           });
 
   });

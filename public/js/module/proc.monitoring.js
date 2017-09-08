@@ -87,8 +87,16 @@ getVals = function(){
     idata.save_date = save_date
     inputdata = {idata:idata};
   configMap.proc_model.save(inputdata,function(data){
-       console.log(data)
-      
+      if(idata.ptype == 2){
+          console.log('in')
+       $( data ).insertBefore( "#total_pbid" );
+      }
+      else{
+          console.log('in')
+        $( data ).insertBefore( "#total_altmode" );
+      }
+    clear_vals()
+
     })
 }
 
