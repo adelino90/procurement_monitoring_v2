@@ -82,8 +82,6 @@ getVals = function(){
             //console.log($('#'+configMap.keys[i]).val());
         idata[configMap.keys[i]] = $('#'+configMap.keys[i]).val()
     }
-
-      
     save_date =  jqueryMap.$from.text();
     save_date = moment(save_date).format('L');
     idata.save_date = save_date
