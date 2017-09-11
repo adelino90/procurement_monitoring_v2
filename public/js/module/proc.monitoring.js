@@ -12,7 +12,7 @@ configMap = {
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined ,procurement_model : undefined},
 jqueryMap = {},
-copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals, initModule;
+copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals,validate, initModule;
 
 // Begin DOM method /setJqueryMap/
 setJqueryMap = function () {
@@ -75,7 +75,11 @@ setJqueryMap = function () {
 		}
 };
 
+validate = function(){
+
+}
 getVals = function(){
+    $(".overlay").show();
     var idata = {};
     var inputdata, save_date,save_type = jqueryMap.$procurement_save.attr("save_type");
     for(var i=0;i < configMap.keys.length;i++){
@@ -86,22 +90,33 @@ getVals = function(){
     save_date = moment(save_date).format('L');
     idata.save_date = save_date
     inputdata = {idata:idata};
-    if(save_type=="1"){
-        configMap.proc_model.save(inputdata,function(data){
-            if(idata.ptype == 2){
-            $( data ).insertBefore( "#total_pbid" );
-            }
-            else{
-                $( data ).insertBefore( "#total_altmode" );
-            }
-            clear_vals()
+    if(jqueryMap.$ptype.val()){
+        if(save_type=="1"){
+            configMap.proc_model.save(inputdata,function(data){
+                if(idata.ptype == 2){
+                    $( data ).insertBefore( "#total_pbid" );
+                }
+                else{
+                    $( data ).insertBefore( "#total_altmode" );
+                }
+                $(".overlay").hide();
+                clear_vals()
+                setEvents()
+                
 
-        })
+            })
+        }
+        else{
+            clear_vals()
+            alert("UPDATED")
+            $(".overlay").hide();
+        }    
     }
     else{
-        clear_vals()
-        alert("UPDATED")
-    }    
+        alert("Please Select A Procurement Type")
+        $(".overlay").hide();
+    }
+
 }
 
 data_filter = function(date_from,date_to,search_str){

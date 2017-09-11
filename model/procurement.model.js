@@ -774,14 +774,14 @@ save_data = function(input_data,callback){
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.Del_Completion)+'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.Acceptance_date) +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(ret_data.Fund_Name)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.ABC)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.ABC_MOOE) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.ABC_CO)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.ABC_Others) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.Contract_Cost) +'</td> \
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.Contract_Cost_MOOE) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.Contract_Cost_CO) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.Contract_Cost_Others)  +'</td>\
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.ABC)).toLocaleString())  +'</td>\
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.ABC_MOOE)).toLocaleString()) +'</td>\
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.ABC_CO)).toLocaleString())  +'</td>\
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.ABC_Others)).toLocaleString()) +'</td>\
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.Contract_Cost)).toLocaleString()) +'</td> \
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.Contract_Cost_MOOE)).toLocaleString()) +'</td>\
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.Contract_Cost_CO)).toLocaleString()) +'</td>\
+                                      <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.Contract_Cost_Others)).toLocaleString())  +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.Invited_Observers) +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.DRP_Pre_Proc_conf)  +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.DRP_Pre_Bid_conf) +'</td>\
@@ -805,7 +805,13 @@ save_data = function(input_data,callback){
           
 			})
 }
-
+checkIfisNaN = function(value){
+    if(isNaN(parseFloat(value))==true){
+        return '';
+    }
+    else
+        return value;
+}
 getdropdownvalues = function(id1,id2,callback){
         const request = new sql.Request(gpool)
             .input('fund_ID', sql.Int, id1)
