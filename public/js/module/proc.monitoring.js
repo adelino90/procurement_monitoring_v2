@@ -86,18 +86,16 @@ getVals = function(){
     save_date = moment(save_date).format('L');
     idata.save_date = save_date
     inputdata = {idata:idata};
-  configMap.proc_model.save(inputdata,function(data){
-      if(idata.ptype == 2){
-          console.log('in')
-       $( data ).insertBefore( "#total_pbid" );
-      }
-      else{
-          console.log('in')
-        $( data ).insertBefore( "#total_altmode" );
-      }
-    clear_vals()
+    configMap.proc_model.save(inputdata,function(data){
+        if(idata.ptype == 2){
+        $( data ).insertBefore( "#total_pbid" );
+        }
+        else{
+            $( data ).insertBefore( "#total_altmode" );
+        }
+        clear_vals()
 
-    })
+        })
 }
 
 data_filter = function(date_from,date_to,search_str){
@@ -116,7 +114,7 @@ clear_vals = function(){
             jqueryMap.$code_PAP.val("") 
 			jqueryMap.$pr_no.val("")  
 			jqueryMap.$PO_JO.val("")   
-			jqueryMap.$program_proj_name.text("")   
+			jqueryMap.$program_proj_name.val("")   
 			jqueryMap.$end_user.val("")   
 			jqueryMap.$MOP.val(-1)  
 			jqueryMap.$pre_Proc .val("")  
@@ -127,12 +125,12 @@ clear_vals = function(){
 			jqueryMap.$Bid_Eval.val("") 
 			jqueryMap.$Post_Qual.val("") 
 			jqueryMap.$Notice_of_Award.val("") 
-			jqueryMap.$Contract_Signing .val("") 
-			jqueryMap.$Notice_To_Proceed .val("") 
-			jqueryMap.$Del_Completion .val("") 
-			jqueryMap.$Acceptance_date  .val("") 
-			jqueryMap.$Source_of_Funds .val(-1) 
-			jqueryMap.$ABC  .val("") 
+			jqueryMap.$Contract_Signing.val("") 
+			jqueryMap.$Notice_To_Proceed.val("") 
+			jqueryMap.$Del_Completion.val("") 
+			jqueryMap.$Acceptance_date.val("") 
+			jqueryMap.$Source_of_Funds.val(-1) 
+			jqueryMap.$ABC.val("") 
 			jqueryMap.$ABC_MOOE .val("") 
 			jqueryMap.$ABC_CO  .val("") 
 			jqueryMap.$ABC_Others .val("") 
