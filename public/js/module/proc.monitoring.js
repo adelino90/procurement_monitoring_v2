@@ -77,25 +77,33 @@ setJqueryMap = function () {
 
 getVals = function(){
     var idata = {};
-    var inputdata, save_date;
+    var inputdata, save_date,save_type = jqueryMap.$procurement_save.attr("save_type");
     for(var i=0;i < configMap.keys.length;i++){
             //console.log($('#'+configMap.keys[i]).val());
         idata[configMap.keys[i]] = $('#'+configMap.keys[i]).val()
     }
+
+      
     save_date =  jqueryMap.$from.text();
     save_date = moment(save_date).format('L');
     idata.save_date = save_date
     inputdata = {idata:idata};
-    configMap.proc_model.save(inputdata,function(data){
-        if(idata.ptype == 2){
-        $( data ).insertBefore( "#total_pbid" );
-        }
-        else{
-            $( data ).insertBefore( "#total_altmode" );
-        }
-        clear_vals()
+    if(save_type=="1"){
+        configMap.proc_model.save(inputdata,function(data){
+            if(idata.ptype == 2){
+            $( data ).insertBefore( "#total_pbid" );
+            }
+            else{
+                $( data ).insertBefore( "#total_altmode" );
+            }
+            clear_vals()
 
         })
+    }
+    else{
+        clear_vals()
+        alert("UPDATED")
+    }    
 }
 
 data_filter = function(date_from,date_to,search_str){
@@ -202,7 +210,8 @@ set_modal_values = function(id){
 			jqueryMap.$DRP_Delivery_Accept.val(data.DRP_Delivery_Accept) 
 			jqueryMap.$Remarks .val(data.Remarks) 
 			jqueryMap.$ptype .val(data.ptype_id) 
-
+            jqueryMap.$procurement_save.attr("save_type", "2");
+            jqueryMap.$procurement_save.attr("save_id", id);
     })
 }
 
@@ -258,6 +267,8 @@ setEvents = function(from,to,search_str){
     })
     jqueryMap.$procurement_add.click(function() {
         clear_vals();
+        jqueryMap.$procurement_save.attr("save_type", "1");
+        jqueryMap.$procurement_save.removeAttr("save_id");
         $('#myModal').css("display","block");
     });
     jqueryMap.$date_save.click(function(){
@@ -280,7 +291,7 @@ setEvents = function(from,to,search_str){
            var from = new Date($("#from").text()); 
            //data_filter(moment(from).format('L'),moment(temp_date).format('L'),search_str)
            
-           configMap.change_option_anchor('monitoring',moment(from).format('L'), moment(temp_date).format('L'),search_str );
+           configMap.change_option_anchor('monitoring',moment(from).format('L'), moment(temp_date).format('L'),search_str);
            jqueryMap.$to.text(temp_date); 
         }
         jqueryMap.$date_modal.css("display","none");
