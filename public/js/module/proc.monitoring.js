@@ -12,7 +12,8 @@ configMap = {
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined ,procurement_model : undefined},
 jqueryMap = {},
-copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals,validate, initModule;
+copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals,validate,
+refresh_total, initModule;
 
 // Begin DOM method /setJqueryMap/
 setJqueryMap = function () {
@@ -78,6 +79,15 @@ setJqueryMap = function () {
 validate = function(){
 
 }
+refresh_total = function(ptype){
+     var from_date =  jqueryMap.$from.text();
+     from_date = moment(from_date ).format('L');
+     var to_date =  jqueryMap.$to.text();
+     to_date = moment(to_date).format('L');
+     var search_str = jqueryMap.$search.val();
+     var ref_data = {from:from_date,to:to_date,ptype:parseInt(ptype),search:search_str};
+   
+}
 getVals = function(){
     $(".overlay").show();
     var idata = {};
@@ -86,6 +96,8 @@ getVals = function(){
             //console.log($('#'+configMap.keys[i]).val());
         idata[configMap.keys[i]] = $('#'+configMap.keys[i]).val()
     }
+    idata.mode = (idata.mode==null ? 0 : idata.mode)
+    idata.fund = (idata.fund==null ? 0 : idata.fund)
     save_date =  jqueryMap.$from.text();
     save_date = moment(save_date).format('L');
     idata.save_date = save_date
@@ -99,10 +111,12 @@ getVals = function(){
                 else{
                     $( data ).insertBefore( "#total_altmode" );
                 }
+
                 $(".overlay").hide();
+                refresh_total(idata.ptype);    
                 clear_vals()
                 setEvents()
-                
+                $('#myModal').css("display","none");
 
             })
         }
@@ -110,6 +124,7 @@ getVals = function(){
             clear_vals()
             alert("UPDATED")
             $(".overlay").hide();
+            $('#myModal').css("display","none");
         }    
     }
     else{
@@ -124,6 +139,7 @@ data_filter = function(date_from,date_to,search_str){
     $(".overlay").show();
     var filter_data = {from:date_from,to:date_to,search_str:search_str}
     configMap.proc_model.get_filter_proc(filter_data,function(data){
+        jqueryMap.$record_table.find('tbody').off().empty()
         jqueryMap.$record_table.find('tbody').html(data.html)
         setJqueryMap();
         setEvents(date_from,date_to,search_str);
@@ -187,7 +203,7 @@ set_modal_values = function(id){
             jqueryMap.$code_PAP.val(data.code_PAP) 
 			jqueryMap.$pr_no.val(data.pr_no)  
 			jqueryMap.$PO_JO.val(data.PO_JO)   
-			jqueryMap.$program_proj_name.text(data.program_proj_name)   
+			jqueryMap.$program_proj_name.val(data.program_proj_name)   
 			jqueryMap.$end_user.val(data.end_user)   
 			jqueryMap.$MOP.val(data.MOP_id)  
 			jqueryMap.$pre_Proc .val(data.pre_Proc)  
@@ -233,6 +249,7 @@ setEvents = function(from,to,search_str){
     
         var proc_id;
         proc_id =  $(this).attr('data-id');
+        proc_id = parseInt(proc_id);
         if(proc_id!="none"){
             $('#record_table > tbody >tr').removeClass('cell_hover');
             var data_id = $(this).attr('data-id');
@@ -252,7 +269,7 @@ setEvents = function(from,to,search_str){
          jqueryMap.$date_modal.css("display","none");
     })
     jqueryMap.$procurement_save.click(function(){
-         $('#myModal').css("display","none");
+      
          getVals();
     })
     jqueryMap.$from.click(function(){
@@ -374,6 +391,7 @@ setcontent = function(from,to,search_str,$container){
 
 initModule = function ( $container,from,to,search_str ) {
     stateMap.$container = $container;
+    $container.off().empty();
     var temp_from = from;
     var dates = getDate();
     search_str = (search_str=='undefined' ? '' :search_str)

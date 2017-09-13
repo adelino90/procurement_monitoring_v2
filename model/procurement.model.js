@@ -467,11 +467,11 @@ filter_proc_data = function(filter_data,callback){
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"><b>SUB-TOTAL:</b></td>\
-                                      <td class = "cells data_cell">`+nullvalidation(data4[0].total_ABC)+`</td>\
+                                      <td class = "cells data_cell" id="PB_ABC_TOTAL">`+nullvalidation(data4[0].total_ABC)+`</td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"><b>SUB-TOTAL:</b></td>\
-                                      <td class = "cells data_cell">`+nullvalidation(data4[0].total_contract_cost)+`</td> \
+                                      <td class = "cells data_cell" id="PB_C_COST_TOTAL">`+nullvalidation(data4[0].total_contract_cost)+`</td> \
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
@@ -613,11 +613,11 @@ filter_proc_data = function(filter_data,callback){
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"><b>SUB-TOTAL:</b></td>\
-                                      <td class = "cells data_cell">`+nullvalidation(data3[0].total_ABC)+`</td>\
+                                      <td class = "cells data_cell" id="ALT_ABC_TOTAL">`+nullvalidation(data3[0].total_ABC)+`</td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"><b>SUB-TOTAL:</b></td>\
-                                      <td class = "cells data_cell">`+nullvalidation(data3[0].total_contract_cost)+`</td> \
+                                      <td class = "cells data_cell" id="ALT_C_COST_TOTAL">`+nullvalidation(data3[0].total_contract_cost)+`</td> \
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
@@ -773,7 +773,7 @@ save_data = function(input_data,callback){
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.Notice_To_Proceed)  +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.Del_Completion)+'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(input_data.Acceptance_date) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(ret_data.Fund_Name)  +'</td>\
+                                      <td class = "cells data_cell">'+ nullvalidation(ret_data.fund)  +'</td>\
                                       <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.ABC)).toLocaleString())  +'</td>\
                                       <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.ABC_MOOE)).toLocaleString()) +'</td>\
                                       <td class = "cells data_cell">'+ checkIfisNaN(parseFloat(nullvalidation(input_data.ABC_CO)).toLocaleString())  +'</td>\
@@ -801,7 +801,7 @@ save_data = function(input_data,callback){
               }
                else{
                     callback(err); 
-            }
+                }
           
 			})
 }
@@ -812,20 +812,39 @@ checkIfisNaN = function(value){
     else
         return value;
 }
+
 getdropdownvalues = function(id1,id2,callback){
+        id1 = checkIfisNaN(parseInt(id1))
+        id2 = checkIfisNaN(parseInt(id2)) 
         const request = new sql.Request(gpool)
             .input('fund_ID', sql.Int, id1)
             .input('mode_id', sql.Int, id2)
             .execute('getDropdown', (err, result) => {
+                console.log(result)
                     if(result)
                         callback(result.recordset[0])
                     else{
                         callback({Fund_Name:null,mode:null})
+                        console.log("dito")
                     }
             })
+}
+
+get_total = function(datefrom,dateto,search_str,ptype,callback){         
+    const request = new sql.Request(gpool)
+        .input('from', sql.NVarChar, datefrom)
+        .input('to', sql.NVarChar, dateto)
+        .input('search_str', sql.NVarChar, search_str)
+        .input('ptype', sql.Int, ptype)
+        .execute('get_total_ABC_CC', (err, result) => {
+            if(result)
+                callback(result)
+
+        })
 }
           exports.proc_data = proc_data;
           exports.filter_proc_data = filter_proc_data;
           exports.procurement_details = procurement_details;
           exports.excel_data = excel_data;
           exports.save_data  = save_data;
+          exports.get_total = get_total;

@@ -32,14 +32,27 @@ app.get('/get_excel',function(req,res){
 
     res.sendFile(path.join(__dirname, '/../','public/test.xlsx'));
 })
-  app.post('/save',function(req,res,next){
-          alldata= req.body.idata
-          model.save_data(alldata,function(data){
-                if(data)
-                    res.send(data);
-          });
+app.post('/save',function(req,res,next){
+        alldata= req.body.idata
+        model.save_data(alldata,function(data){
+            if(data)
+                res.send(data);
+        });
 
-  });
+});
+
+app.post('/get_total',function(req,res,next){
+        from = req.body.from;
+        to = req.body.to;
+        search = req.body.search;
+        ptype = req.body.ptype 
+        model.get_total(from,to,search,ptype,function(data){
+            if(data)
+                res.send(data);
+        });
+
+});
+
 app.post('/generate_excel',function(req,res,next){
        /* original data */
                 input = req.body
