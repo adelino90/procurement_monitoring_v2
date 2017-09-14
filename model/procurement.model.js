@@ -512,13 +512,12 @@ filter_proc_data = function(filter_data,callback){
                                       <td class = "cellsh program_name no-pads"><b>B. ALTERNATIVE MODE OF PROCUREMENT</b></td>  \
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
-                                      <td class = "cellsh data_cell"></td>  \
-                                      <td class = "cellsh data_cell"></td>  \
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td> \ 
                                       <td class = "cellsh data_cell"></td>\
-                                      <td class = "cellsh data_cell"></td> \ 
-                                      <td class = "cellsh data_cell"></td>  \
+                                      <td class = "cellsh data_cell"></td>\ 
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
@@ -529,7 +528,8 @@ filter_proc_data = function(filter_data,callback){
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
-                                      <td class = "cellsh data_cell"></td> \
+                                      <td class = "cellsh data_cell"></td>\
+                                      <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
                                       <td class = "cellsh data_cell"></td>\
@@ -551,16 +551,16 @@ filter_proc_data = function(filter_data,callback){
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].code_PAP) +'</td>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].pr_no) +'</td>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].PO_JO) +'</td>\
-                                      <td class = "cells program_name no-pads">'+ nullvalidation(data2[i].program_proj_name)+'</td>  \
+                                      <td class = "cells program_name no-pads">'+ nullvalidation(data2[i].program_proj_name)+'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(data2[i].end_user)  +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(data2[i].Mode)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].pre_Proc) +'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].ads_post_IAEB)+'</td>  \
+                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].pre_Proc) +'</td>\
+                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].ads_post_IAEB)+'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(data2[i].Pre_bid) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].Eligibility_Check)+'</td>  \
+                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].Eligibility_Check)+'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(data2[i].oob) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].Bid_Eval)+'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].Post_Qual)+'</td>  \
+                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].Bid_Eval)+'</td>\
+                                      <td class = "cells data_cell">'+ nullvalidation(data2[i].Post_Qual)+'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(data2[i].Notice_of_Award) +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(data2[i].Contract_Signing)  +'</td>\
                                       <td class = "cells data_cell">'+ nullvalidation(data2[i].Notice_To_Proceed)  +'</td>\
@@ -600,13 +600,13 @@ filter_proc_data = function(filter_data,callback){
                                       <td class = "cells program_name no-pads"></td>  \
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
-                                      <td class = "cells data_cell"></td>  \
-                                      <td class = "cells data_cell"></td>  \
+                                      <td class = "cells data_cell"></td>\
+                                      <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td> \ 
                                       <td class = "cells data_cell"></td>\
-                                      <td class = "cells data_cell"></td> \ 
-                                      <td class = "cells data_cell"></td>  \
+                                      <td class = "cells data_cell"></td>\ 
+                                      <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
                                       <td class = "cells data_cell"></td>\
@@ -751,54 +751,54 @@ save_data = function(input_data,callback){
                     // ...
                 inserted_id = result.recordset[0].id;
                 inserted_data =  result.recordset[0];
-              if(!err){
+                if(!err){
                   
                     getdropdownvalues(input_data.fund,input_data.mode,function(ret_data){
-                    html=' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(inserted_id) +'">\
-                                      <td class = "cells small_width">'+ nullvalidation(input_data.code_PAP) +'</td>\
-                                      <td class = "cells small_width">'+ nullvalidation(input_data.pr_no) +'</td>\
-                                      <td class = "cells small_width">'+ nullvalidation(input_data.PO_JO) +'</td>\
-                                      <td class = "cells program_name no-pads">'+ nullvalidation(input_data.program_proj_name)+'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.end_user)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(ret_data.mode)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.pre_Proc) +'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.ads_post_IAEB)+'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Pre_bid) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Eligibility_Check)+'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.oob) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Bid_Eval)+'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Post_Qual)+'</td>  \
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Notice_of_Award) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Signing)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Notice_To_Proceed)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Del_Completion)+'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Acceptance_date) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(ret_data.fund)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_MOOE) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_CO)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_Others) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost) +'</td> \
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_MOOE) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_CO) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_Others)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.Invited_Observers) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Pre_Proc_conf)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Pre_Bid_conf) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Eligibility_check)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_OOP) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Bid_Eval) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Post_Qual) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Notice_of_Award)  +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Contract_Signing) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Delivery_Accept) +'</td>\
-                                      <td class = "cells data_cell">'+ nullvalidation(input_data.Remarks)  +'</td>\
-                                  </tr>';
+                        html=' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(inserted_id) +'">\
+                                        <td class = "cells small_width">'+ nullvalidation(input_data.code_PAP) +'</td>\
+                                        <td class = "cells small_width">'+ nullvalidation(input_data.pr_no) +'</td>\
+                                        <td class = "cells small_width">'+ nullvalidation(input_data.PO_JO) +'</td>\
+                                        <td class = "cells program_name no-pads">'+ nullvalidation(input_data.program_proj_name)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(input_data.end_user)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(ret_data.mode)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.pre_Proc) +'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ads_post_IAEB)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Pre_bid) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Eligibility_Check)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.oob) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Bid_Eval)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Post_Qual)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Notice_of_Award) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Signing)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Notice_To_Proceed)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Del_Completion)+'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Acceptance_date) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(ret_data.fund)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_MOOE) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_CO)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_Others) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost) +'</td> \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_MOOE) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_CO) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_Others)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Invited_Observers) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Pre_Proc_conf)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Pre_Bid_conf) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Eligibility_check)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_OOP) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Bid_Eval) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Post_Qual) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Notice_of_Award)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Contract_Signing) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Delivery_Accept) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(input_data.Remarks)  +'</td>\
+                                    </tr>';
                 
-                    callback(html)
+                        callback(html)
                       
                     })
-              }
+                }
                else{
                     callback(err); 
                 }
