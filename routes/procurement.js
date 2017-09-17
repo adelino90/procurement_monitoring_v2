@@ -41,6 +41,15 @@ app.post('/save',function(req,res,next){
 
 });
 
+app.post('/save_update',function(req,res,next){
+        alldata= req.body.idata
+        model.save_data(alldata,function(data){
+            if(data)
+                res.send(data);
+        });
+
+});
+
 app.post('/get_total',function(req,res,next){
         from = req.body.from;
         to = req.body.to;

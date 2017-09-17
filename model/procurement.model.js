@@ -699,7 +699,111 @@ excel_data = function(inputd,callback){
         })
            
 }
-
+save_update_data = function(input_data,callback){
+     var html = ''
+            var d = new Date();
+            var date_save = input_data.save_date;
+            sql.close();
+		    const request = new sql.Request(gpool)
+			.input('code_PAP', sql.NVarChar, input_data.code_PAP)
+			.input('pr_no', sql.NVarChar, input_data.pr_no)
+            .input('PO_JO', sql.NVarChar, input_data.PO_JO)
+            .input('program_proj_name', sql.NVarChar, input_data.program_proj_name)
+            .input('end_user', sql.NVarChar, input_data.end_user)
+            .input('MOP', sql.NVarChar, parseInt(input_data.mode))
+            .input('pre_Proc', sql.NVarChar,  convertDate(input_data.pre_Proc))
+            .input('ads_post_IAEB', sql.NVarChar,  convertDate(input_data.ads_post_IAEB))
+            .input('Pre_bid', sql.NVarChar,  convertDate(input_data.Pre_bid))
+            .input('Eligibility_Check', sql.NVarChar,  convertDate(input_data.Eligibility_Check))
+            .input('oob', sql.NVarChar,  convertDate(input_data.oob))
+            .input('Bid_Eval', sql.NVarChar,  convertDate(input_data.Bid_Eval))
+            .input('Post_Qual', sql.NVarChar,  convertDate(input_data.Post_Qual))
+            .input('Notice_of_Award', sql.NVarChar,  convertDate(input_data.Notice_of_Award))
+            .input('Contract_Signing', sql.NVarChar,  convertDate(input_data.Contract_Signing))
+            .input('Notice_To_Proceed', sql.NVarChar,  convertDate(input_data.Notice_To_Proceed))
+            .input('Del_Completion', sql.NVarChar,  convertDate(input_data.Del_Completion))
+            .input('Acceptance_date', sql.NVarChar,  convertDate(input_data.Acceptance_date))
+            .input('Source_of_Funds', sql.NVarChar, input_data.fund)
+            .input('ABC', sql.Float,parseFloat(input_data.ABC))
+            .input('ABC_MOOE', sql.Float, parseFloat(input_data.ABC_MOOE))
+            .input('ABC_CO', sql.Float, parseFloat(input_data.ABC_CO))
+            .input('ABC_Others', sql.Float, parseFloat(input_data.ABC_Others))
+            .input('Contract_Cost', sql.Float, parseFloat(input_data.Contract_Cost))
+            .input('Contract_Cost_MOOE', sql.Float, parseFloat(input_data.Contract_Cost_MOOE))
+            .input('Contract_Cost_CO', sql.Float, parseFloat(input_data.Contract_Cost_CO))
+            .input('Contract_Cost_Others', sql.Float, parseFloat(input_data.Contract_Cost_Others))
+            .input('Invited_Observers', sql.NVarChar, input_data.Invited_Observers)
+            .input('DRP_Pre_Proc_conf', sql.NVarChar,  convertDate(input_data.DRP_Pre_Proc_conf))
+            .input('DRP_Pre_Bid_conf', sql.NVarChar,  convertDate(input_data.DRP_Pre_Bid_conf))
+            .input('DRP_Eligibility_check', sql.NVarChar,  convertDate(input_data.DRP_Eligibility_check))
+            .input('DRP_OOP', sql.NVarChar,  convertDate(input_data.DRP_OOP))
+            .input('DRP_Bid_Eval', sql.NVarChar,  convertDate(input_data.DRP_Bid_Eval))
+            .input('DRP_Post_Qual', sql.NVarChar,  convertDate(input_data.DRP_Post_Qual))
+            .input('DRP_Notice_of_Award', sql.NVarChar,  convertDate(input_data.DRP_Notice_of_Award))
+            .input('DRP_Contract_Signing', sql.NVarChar,  convertDate(input_data.DRP_Contract_Signing))
+            .input('DRP_Delivery_Accept', sql.NVarChar,  convertDate(input_data.DRP_Delivery_Accept))
+            .input('Remarks', sql.NVarChar, input_data.Remarks)
+            .input('date_today', sql.NVarChar, date_save)
+            .input('ptype', sql.Int, input_data.ptype)
+            .input('ptype', sql.Int, input_data.id)
+            .execute('id', (err, result) => {
+                    // ...
+                inserted_id = result.recordset[0].id;
+                inserted_data =  result.recordset[0];
+                if(!err){
+                  
+                    getdropdownvalues(input_data.fund,input_data.mode,function(ret_data){
+                        html=' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(inserted_id) +'">\
+                                        <td class = "cells small_width">'+ nullvalidation(input_data.code_PAP) +'</td>\
+                                        <td class = "cells small_width">'+ nullvalidation(input_data.pr_no) +'</td>\
+                                        <td class = "cells small_width">'+ nullvalidation(input_data.PO_JO) +'</td>\
+                                        <td class = "cells program_name no-pads">'+ nullvalidation(input_data.program_proj_name)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(input_data.end_user)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(ret_data.mode)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.pre_Proc) +'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ads_post_IAEB)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Pre_bid) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Eligibility_Check)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.oob) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Bid_Eval)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Post_Qual)+'</td>  \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Notice_of_Award) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Signing)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Notice_To_Proceed)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Del_Completion)+'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Acceptance_date) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(ret_data.fund)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_MOOE) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_CO)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.ABC_Others) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost) +'</td> \
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_MOOE) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_CO) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Contract_Cost_Others)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.Invited_Observers) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Pre_Proc_conf)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Pre_Bid_conf) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Eligibility_check)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_OOP) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Bid_Eval) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Post_Qual) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Notice_of_Award)  +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Contract_Signing) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(inserted_data.DRP_Delivery_Accept) +'</td>\
+                                        <td class = "cells data_cell">'+ nullvalidation(input_data.Remarks)  +'</td>\
+                                    </tr>';
+                
+                        callback(html)
+                      
+                    })
+                }
+               else{
+                    callback(err); 
+                }
+          
+			})
+}
 
 save_data = function(input_data,callback){
             var html = ''
