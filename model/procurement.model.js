@@ -745,15 +745,15 @@ save_update_data = function(input_data,callback){
             .input('Remarks', sql.NVarChar, input_data.Remarks)
             .input('date_today', sql.NVarChar, date_save)
             .input('ptype', sql.Int, input_data.ptype)
-            .input('ptype', sql.Int, input_data.id)
-            .execute('id', (err, result) => {
+            .input('id', sql.Int, input_data.id)
+            .execute('save_update_procurement', (err, result) => {
                     // ...
                 inserted_id = result.recordset[0].id;
                 inserted_data =  result.recordset[0];
                 if(!err){
                   
                     getdropdownvalues(input_data.fund,input_data.mode,function(ret_data){
-                        html=' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(inserted_id) +'">\
+                        html=' <tr class = "row-hover procurement_data cell_hover" data-id = '+ nullvalidation(inserted_id) +'>\
                                         <td class = "cells small_width">'+ nullvalidation(input_data.code_PAP) +'</td>\
                                         <td class = "cells small_width">'+ nullvalidation(input_data.pr_no) +'</td>\
                                         <td class = "cells small_width">'+ nullvalidation(input_data.PO_JO) +'</td>\
@@ -951,3 +951,4 @@ get_total = function(datefrom,dateto,search_str,ptype,callback){
           exports.excel_data = excel_data;
           exports.save_data  = save_data;
           exports.get_total = get_total;
+          exports.save_update_data = save_update_data;

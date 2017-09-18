@@ -43,7 +43,7 @@ app.post('/save',function(req,res,next){
 
 app.post('/save_update',function(req,res,next){
         alldata= req.body.idata
-        model.save_data(alldata,function(data){
+        model.save_update_data(alldata,function(data){
             if(data)
                 res.send(data);
         });

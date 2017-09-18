@@ -103,7 +103,7 @@ getVals = function(){
     idata.save_date = save_date
     inputdata = {idata:idata};
     if(jqueryMap.$ptype.val()){
-        if(save_type=="1"){
+        if(save_type==1){
             configMap.proc_model.save(inputdata,function(data){
                 if(idata.ptype == 2){
                     $( data ).insertBefore( "#total_pbid" );
@@ -121,10 +121,30 @@ getVals = function(){
             })
         }
         else{
-            clear_vals()
-            alert("UPDATED")
-            $(".overlay").hide();
-            $('#myModal').css("display","none");
+            var row_id = jqueryMap.$procurement_save.attr('save_id');
+            inputdata.idata.id = row_id
+           
+            configMap.proc_model.save_update(inputdata,function(data){
+                clear_vals()
+                alert("UPDATED")
+                $(".overlay").hide();
+                $('.cell_hover').replaceWith(data)
+                $('#myModal').css("display","none");
+                $('tr[data-id="'+row_id+'"]').replaceWith(data)
+                $('tr[data-id="'+row_id+'"]').click(function(){
+                    var proc_id;
+                    proc_id =  $(this).attr('data-id');
+                    proc_id = parseInt(proc_id);
+                    if(proc_id!="none"){
+                        $('#record_table > tbody >tr').removeClass('cell_hover');
+                        var data_id = $(this).attr('data-id');
+                        $(this).addClass("cell_hover")
+                        $('#myModal').css("display","block");
+                        set_modal_values(proc_id)  
+                    }
+                })
+            });
+
         }    
     }
     else{

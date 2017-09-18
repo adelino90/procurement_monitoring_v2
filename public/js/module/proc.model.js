@@ -43,7 +43,7 @@ navigation = (function(){
 
 monitoring  = (function(){
   
-   var get_proc,get_filter_proc,view_proc,generate,add_proc,update_proc,save;
+   var get_proc,get_filter_proc,view_proc,generate,add_proc,update_proc,save,save_update;
      add_proc = curryStoreData("/add_proc");
      update_proc = curryStoreData("/update_proc");
      get_proc = curryFetchData("/get_procurement");
@@ -51,6 +51,7 @@ monitoring  = (function(){
      view_proc  = curryStoreData("/view_procurement");
      generate  = curryStoreData("/generate_excel");
      save = curryStoreData("/save");
+     save_update = curryStoreData("/save_update");
     return {
         get_proc : get_proc,
         get_filter_proc:get_filter_proc,
@@ -58,7 +59,8 @@ monitoring  = (function(){
         generate    : generate,
         add_proc   : add_proc,
         update_proc  : update_proc,
-        save    :save 
+        save    :save ,
+        save_update :save_update
     }
 
 }());
