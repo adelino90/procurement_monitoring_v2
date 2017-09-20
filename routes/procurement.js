@@ -26,7 +26,7 @@ app.post('/view_procurement',function(req,res,next){
 		      model.procurement_details(procurement_id,function(data){
                     res.send(data);
               })
-     })
+ })
 
 app.get('/get_excel',function(req,res){
 
@@ -57,7 +57,7 @@ app.post('/get_total',function(req,res,next){
         ptype = req.body.ptype 
         model.get_total(from,to,search,ptype,function(data){
             if(data)
-                res.send(data);
+                res.send(data.recordset[0]);
         });
 
 });

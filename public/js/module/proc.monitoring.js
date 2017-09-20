@@ -12,7 +12,8 @@ configMap = {
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined ,procurement_model : undefined},
 jqueryMap = {},
-copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals,validate,clear_events,
+copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, 
+data_filter,set_modal_values,clear_vals,getVals,validate,clear_events,
 refresh_total, initModule;
 
 // Begin DOM method /setJqueryMap/
@@ -72,7 +73,11 @@ setJqueryMap = function () {
 			$DRP_Contract_Signing  : $modal.find('#DRP_Contract_Signing'),
 			$DRP_Delivery_Accept : $modal.find('#DRP_Delivery_Accept'),
 			$Remarks  :$modal.find('#Remarks'),
-			$ptype : $modal.find('#ptype')
+            $ptype : $modal.find('#ptype'),
+            $PB_ABC_TOTAL : $container.find("#PB_ABC_TOTAL"),
+            $PB_C_COST_TOTAL : $container.find("#PB_C_COST_TOTAL"),
+            $ALT_ABC_TOTAL : $container.find("#ALT_ABC_TOTAL"),
+            $ALT_C_COST_TOTAL : $container.find("#ALT_C_COST_TOTAL")
 		}
 };
 
@@ -86,7 +91,17 @@ refresh_total = function(ptype){
      to_date = moment(to_date).format('L');
      var search_str = jqueryMap.$search.val();
      var ref_data = {from:from_date,to:to_date,ptype:parseInt(ptype),search:search_str};
-   
+        configMap.proc_model.refresh_total(ref_data,function(data_ret){
+    
+            if(ptype==1){
+                jqueryMap.$ALT_ABC_TOTAL.text(data_ret.total_ABC)
+                jqueryMap.$ALT_C_COST_TOTAL.text(data_ret.total_contract_cost)
+            }
+            else{
+                jqueryMap.$PB_ABC_TOTAL.text(data_ret.total_ABC)
+                jqueryMap.$PB_C_COST_TOTAL.text(data_ret.total_contract_cost)
+            }
+        })
 }
 getVals = function(){
     $(".overlay").show();
@@ -145,6 +160,7 @@ getVals = function(){
                         set_modal_values(proc_id)  
                     }
                 })
+                refresh_total(idata.ptype);  
             });
 
         }    
