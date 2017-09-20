@@ -12,7 +12,7 @@ configMap = {
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined ,procurement_model : undefined},
 jqueryMap = {},
-copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals,validate,
+copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, data_filter,set_modal_values,clear_vals,getVals,validate,clear_events,
 refresh_total, initModule;
 
 // Begin DOM method /setJqueryMap/
@@ -115,8 +115,10 @@ getVals = function(){
                 $(".overlay").hide();
                 refresh_total(idata.ptype);    
                 clear_vals()
+                
                 setEvents()
                 $('#myModal').css("display","none");
+                clear_events();
 
             })
         }
@@ -264,13 +266,32 @@ set_modal_values = function(id){
     })
 }
 
+
+clear_events = function(){
+
+
+    jqueryMap.$record_table.find("tr").off();
+    jqueryMap.$modal_close.$search.off();
+    jqueryMap.$procurement_close.$search.off();
+    jqueryMap.$procurement_save.$search.off();
+    jqueryMap.$from.$search.off();
+    jqueryMap.$generate.$search.off();
+    jqueryMap.$to.$search.off();
+    jqueryMap.$procurement_add.$search.off();
+    jqueryMap.$date_save.$search.off();
+    jqueryMap.$search.off();
+}   
 setEvents = function(from,to,search_str){
+
+    
+
     jqueryMap.$record_table.find("tr").click(function() {
     
         var proc_id;
         proc_id =  $(this).attr('data-id');
         proc_id = parseInt(proc_id);
-        if(proc_id!="none"){
+      
+        if(proc_id){
             $('#record_table > tbody >tr').removeClass('cell_hover');
             var data_id = $(this).attr('data-id');
             $(this).addClass("cell_hover")
