@@ -127,13 +127,14 @@ getVals = function(){
                     $( data ).insertBefore( "#total_altmode" );
                 }
 
-                $(".overlay").hide();
-                refresh_total(idata.ptype);    
-                clear_vals()
+               $(".overlay").hide();
+               refresh_total(idata.ptype);    
+               clear_vals() 
                 
-                setEvents()
-                $('#myModal').css("display","none");
-                clear_events();
+               jqueryMap.$procurement_save.off();
+               
+               $('#myModal').css("display","none");
+               setEvents()
 
             })
         }
@@ -286,15 +287,15 @@ set_modal_values = function(id){
 clear_events = function(){
 
 
-    jqueryMap.$record_table.find("tr").off();
-    jqueryMap.$modal_close.$search.off();
-    jqueryMap.$procurement_close.$search.off();
-    jqueryMap.$procurement_save.$search.off();
-    jqueryMap.$from.$search.off();
+    //jqueryMap.$record_table.find("tr").off();
+    jqueryMap.$modal_close.off();
+    //jqueryMap.$procurement_close.off();
+    jqueryMap.$procurement_save.off();
+    jqueryMap.$from.off();
     jqueryMap.$generate.$search.off();
-    jqueryMap.$to.$search.off();
-    jqueryMap.$procurement_add.$search.off();
-    jqueryMap.$date_save.$search.off();
+    jqueryMap.$to.off();
+    jqueryMap.$procurement_add.off();
+    jqueryMap.$date_save.off();
     jqueryMap.$search.off();
 }   
 setEvents = function(from,to,search_str){
@@ -353,10 +354,13 @@ setEvents = function(from,to,search_str){
 
     })
     jqueryMap.$procurement_add.click(function() {
+
         clear_vals();
         jqueryMap.$procurement_save.attr("save_type", "1");
         jqueryMap.$procurement_save.removeAttr("save_id");
+        if(jqueryMap.$search.val()=='')
         $('#myModal').css("display","block");
+
     });
     jqueryMap.$date_save.click(function(){
 
