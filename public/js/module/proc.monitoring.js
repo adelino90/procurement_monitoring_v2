@@ -106,9 +106,10 @@ refresh_total = function(ptype){
 getVals = function(){
     $(".overlay").show();
     var idata = {};
-    var inputdata, save_date,save_type = jqueryMap.$procurement_save.attr("save_type");
+    var inputdata, save_date,save_type = jqueryMap.$procurement_save.attr("save_type"), procurement_type = jqueryMap.$procurement_save.attr("procurement_type");
     for(var i=0;i < configMap.keys.length;i++){
-            //console.log($('#'+configMap.keys[i]).val());
+
+        
         idata[configMap.keys[i]] = $('#'+configMap.keys[i]).val()
     }
     idata.mode = (idata.mode==null ? 0 : idata.mode)
@@ -148,7 +149,26 @@ getVals = function(){
                 $(".overlay").hide();
                 $('.cell_hover').replaceWith(data)
                 $('#myModal').css("display","none");
-                $('tr[data-id="'+row_id+'"]').replaceWith(data)
+                if(procurement_type==idata.ptype)
+                    $('tr[data-id="'+row_id+'"]').replaceWith(data)
+                else{
+
+                    $('tr[data-id="'+row_id+'"]').remove()
+                    if(idata.ptype == 2){
+
+                        $( data ).insertBefore( "#total_pbid" );
+                        refresh_total(2);  
+                        refresh_total(1);  
+                    }
+
+                    else{
+                        $( data ).insertBefore( "#total_altmode" );
+                        refresh_total(2);  
+                        refresh_total(1); 
+                    
+                    }
+                
+                }
                 $('tr[data-id="'+row_id+'"]').click(function(){
                     var proc_id;
                     proc_id =  $(this).attr('data-id');
@@ -280,6 +300,8 @@ set_modal_values = function(id){
 			jqueryMap.$ptype .val(data.ptype_id) 
             jqueryMap.$procurement_save.attr("save_type", "2");
             jqueryMap.$procurement_save.attr("save_id", id);
+            jqueryMap.$procurement_save.attr("procurement_type", data.ptype_id);
+
     })
 }
 
