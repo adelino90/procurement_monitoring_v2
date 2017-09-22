@@ -299,9 +299,7 @@ clear_events = function(){
     jqueryMap.$search.off();
 }   
 setEvents = function(from,to,search_str){
-
     
-
     jqueryMap.$record_table.find("tr").click(function() {
     
         var proc_id;
