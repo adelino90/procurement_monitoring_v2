@@ -196,7 +196,8 @@ proc_data = function(callback){
                                   </tr>`;
 
                   for(i=0;i<record_len2;i++){
-                    html=html+' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(data2[i].id) +'>\
+                    
+                    html=html+' <tr class = "row-hover procurement_data '+(data2[i].cat_id ? "tete" : 'nocat')+'" data-id = '+ nullvalidation(data2[i].id) +'>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].code_PAP) +'</td>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].pr_no) +'</td>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].PO_JO) +'</td>\
@@ -290,13 +291,21 @@ proc_data = function(callback){
 
                                         const fund_sql = new sql.Request(gpool)
                                             .query('Select * from Source_Of_Funds', (err, sourceOF) => {
-                                                ptype = presult.recordset;
-                                                modes = modes.recordset;
-                                                source_of_fund = sourceOF.recordset;
-                                               
-                                                 callback({html:html,datefrom:datefrom,dateto:dateto,ptype:ptype,modes:modes,source_of_fund:source_of_fund});
+                                               const cat_sql = new sql.Request(gpool)
+                                                    .query('Select * from category_tbl order by category_description ASC', (err, cat) => { 
+                                              
+                                              
+                                                            ptype = presult.recordset;
+                                                            modes = modes.recordset;
+                                                            source_of_fund = sourceOF.recordset;
+                                                            category = cat.recordset
+                                                            
+                                                            callback({html:html,datefrom:datefrom,dateto:dateto,ptype:ptype,modes:modes,source_of_fund:source_of_fund,category:category});
                                             // res.render('add',{title:"Add Procurement Monitoring",data : result.recordset[0],mode : 2,ptype:ptype,modes:modes,source_of_fund:source_of_fund});
-                                            })
+                                                    })    
+                                        
+                                        
+                                        })
                                     })
                             
                                 })
@@ -405,6 +414,7 @@ filter_proc_data = function(filter_data,callback){
                                             `;
 
                         for(i=0;i<record_len;i++){
+                            
                                         html=html+' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(data[i].id) +' >\
                                             <td class = "cells small_width">'+ nullvalidation(data[i].code_PAP) +'</td>\
                                             <td class = "cells small_width">'+ nullvalidation(data[i].pr_no) +'</td>\
@@ -547,7 +557,7 @@ filter_proc_data = function(filter_data,callback){
                                   </tr>`;
 
                   for(i=0;i<record_len2;i++){
-                    html=html+' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(data2[i].id) +'">\
+                    html=html+' <tr class = "row-hover procurement_data'+ (data2[i].cat_id ? '' : ' no_cat') +'" data-id = '+ nullvalidation(data2[i].id) +'>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].code_PAP) +'</td>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].pr_no) +'</td>\
                                       <td class = "cells small_width">'+ nullvalidation(data2[i].PO_JO) +'</td>\
@@ -678,7 +688,7 @@ excel_data = function(inputd,callback){
                     .input('search_str', sql.NVarChar, inputd.search_str)
                     .input('from', sql.NVarChar, inputd.from)
                     .input('to', sql.NVarChar,  inputd.to)
-                    .execute('procurement_search', (err2, result2) => {
+                    .execute('generate_report', (err2, result2) => {
                     // ...             
                     
                         
@@ -703,11 +713,15 @@ save_update_data = function(input_data,callback){
      var html = ''
             var d = new Date();
             var date_save = input_data.save_date;
+            var working_days =(Date_caclulate(input_data.PR_Date,input_data.Acceptance_date)!=-1 ? Date_caclulate(input_data.PR_Date,input_data.Acceptance_date):undefined)
             sql.close();
 		    const request = new sql.Request(gpool)
 			.input('code_PAP', sql.NVarChar, input_data.code_PAP)
-			.input('pr_no', sql.NVarChar, input_data.pr_no)
+            .input('pr_no', sql.NVarChar, input_data.pr_no)
+            .input('PR_Date', sql.NVarChar, input_data.PR_Date)
             .input('PO_JO', sql.NVarChar, input_data.PO_JO)
+            .input('PO_JO_Date', sql.NVarChar,  convertDate(input_data.PO_JO_Date))
+            .input('cat', sql.NVarChar, input_data.cat)
             .input('program_proj_name', sql.NVarChar, input_data.program_proj_name)
             .input('end_user', sql.NVarChar, input_data.end_user)
             .input('MOP', sql.NVarChar, parseInt(input_data.mode))
@@ -746,6 +760,8 @@ save_update_data = function(input_data,callback){
             .input('date_today', sql.NVarChar, date_save)
             .input('ptype', sql.Int, input_data.ptype)
             .input('id', sql.Int, input_data.id)
+            .input('supplier', sql.NVarChar, input_data.Supplier)
+            .input('working_days', sql.Int, working_days)
             .execute('save_update_procurement', (err, result) => {
                     // ...
                 inserted_id = result.recordset[0].id;
@@ -804,17 +820,32 @@ save_update_data = function(input_data,callback){
           
 			})
 }
-
+delete_procurement = function(input_data,callback){
+        input_data.id = parseInt(input_data.id)
+        console.log(input_data)
+      const request = new sql.Request(gpool)
+        .input('id', sql.Int, input_data.id)
+            .execute('Delete_Procurement', (err, result) => {
+                console.log(err)
+                 callback(err); 
+                
+            })
+}
 save_data = function(input_data,callback){
             var html = ''
             var d = new Date();
             var date_save = input_data.save_date;
+            input_data.PR_Date = (input_data.PR_Date=="" ? input_data.save_date : input_data.PR_Date);
             sql.close();
+          
 		    const request = new sql.Request(gpool)
 			.input('code_PAP', sql.NVarChar, input_data.code_PAP)
-			.input('pr_no', sql.NVarChar, input_data.pr_no)
+            .input('pr_no', sql.NVarChar, input_data.pr_no)
+            .input('PR_Date', sql.NVarChar, input_data.PR_Date)
             .input('PO_JO', sql.NVarChar, input_data.PO_JO)
+            .input('PO_JO_Date', sql.NVarChar, input_data.PO_JO_Date)
             .input('program_proj_name', sql.NVarChar, input_data.program_proj_name)
+            .input('cat_id', sql.Int, input_data.cat)
             .input('end_user', sql.NVarChar, input_data.end_user)
             .input('MOP', sql.NVarChar, parseInt(input_data.mode))
             .input('pre_Proc', sql.NVarChar,  convertDate(input_data.pre_Proc))
@@ -851,6 +882,7 @@ save_data = function(input_data,callback){
             .input('Remarks', sql.NVarChar, input_data.Remarks)
             .input('date_today', sql.NVarChar, date_save)
             .input('ptype', sql.Int, input_data.ptype)
+            .input('supplier', sql.NVarChar, input_data.Supplier)
             .execute('insert_procurement', (err, result) => {
                     // ...
                 inserted_id = result.recordset[0].id;
@@ -858,7 +890,7 @@ save_data = function(input_data,callback){
                 if(!err){
                   
                     getdropdownvalues(input_data.fund,input_data.mode,function(ret_data){
-                        html=' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(inserted_id) +'">\
+                        html=' <tr class = "row-hover procurement_data" data-id = '+ nullvalidation(inserted_id) +'>\
                                         <td class = "cells small_width">'+ nullvalidation(input_data.code_PAP) +'</td>\
                                         <td class = "cells small_width">'+ nullvalidation(input_data.pr_no) +'</td>\
                                         <td class = "cells small_width">'+ nullvalidation(input_data.PO_JO) +'</td>\
@@ -945,6 +977,54 @@ get_total = function(datefrom,dateto,search_str,ptype,callback){
 
         })
 }
+
+
+Date_caclulate = function(from,to){
+var holidays = 
+[
+	'01/01/2017','01/02/2017','01/28/2017'
+	,'02/25/2017','03/20/2017','04/09/2017'
+	,'04/13/2017','04/14/2017','04/16/2017'
+	,'04/24/2017','05/01/2017','06/12/2017'
+	,'06/21/2017','06/27/2017','08/21/2017'
+	,'08/28/2017','09/02/2017','09/03/2017'
+	,'09/22/2017','10/31/2017','11/01/2017'
+	,'11/13/2017','11/14/2017','11/15/2017'
+	,'11/30/2017','12/01/2017'
+	,'12/08/2017','12/21/2017','12/24/2017'
+	,'12/25/2017','12/30/2017','12/31/2017'
+
+];
+holidays = convert_to_date(holidays);
+
+		
+	var start = new Date(from),
+		finish = new Date(to),
+		dayMilliseconds = 1000 * 60 * 60 * 24;
+	var sday = start
+	var weekDays = 0;
+
+	while (start <= finish) {
+		var day = start.getDay()
+		
+		
+		if ((day == 1 || day == 2 || day == 3  || day == 4  || day == 5) && (holidays.indexOf(start.getTime()) == -1)) {
+			weekDays++;
+		}
+		start = new Date(+start + dayMilliseconds);
+		
+	}
+
+	weekDays = ((holidays.indexOf(finish.getTime()) == -1 && sday.getDay() != 0 && sday.getDay() != 6 ) ? weekDays -1 : weekDays)
+	return weekDays
+}
+convert_to_date = function(dates){
+	for(var i=0;i<dates.length;i++){
+		dates[i] =  new Date(dates[i]).getTime();
+	}
+	return dates;
+
+}
           exports.proc_data = proc_data;
           exports.filter_proc_data = filter_proc_data;
           exports.procurement_details = procurement_details;
@@ -952,3 +1032,4 @@ get_total = function(datefrom,dateto,search_str,ptype,callback){
           exports.save_data  = save_data;
           exports.get_total = get_total;
           exports.save_update_data = save_update_data;
+          exports.delete_procurement = delete_procurement

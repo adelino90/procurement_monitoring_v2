@@ -43,7 +43,7 @@ navigation = (function(){
 
 monitoring  = (function(){
   
-   var get_proc,get_filter_proc,view_proc,generate,add_proc,update_proc,save,save_update,refresh_total;
+   var get_proc,get_filter_proc,view_proc,generate,add_proc,update_proc,save,save_update,refresh_total,delete_proc;
      add_proc = curryStoreData("/add_proc");
      update_proc = curryStoreData("/update_proc");
      get_proc = curryFetchData("/get_procurement");
@@ -53,6 +53,8 @@ monitoring  = (function(){
      save = curryStoreData("/save");
      save_update = curryStoreData("/save_update");
      refresh_total = curryStoreData("/get_total");
+      delete_proc = curryStoreData("/delete_proc");
+     
     return {
         get_proc : get_proc,
         get_filter_proc:get_filter_proc,
@@ -62,7 +64,8 @@ monitoring  = (function(){
         update_proc  : update_proc,
         save    :save ,
         save_update :save_update,
-        refresh_total :refresh_total
+        refresh_total :refresh_total,
+        delete_proc :delete_proc
     }
 
 }());

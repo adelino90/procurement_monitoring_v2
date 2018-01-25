@@ -4,9 +4,13 @@ proc.field_keys = (function () {
   var field_keys 
   
   
-field_keys = ['ptype','code_PAP',
+field_keys = ['ptype',
+'code_PAP',
 'pr_no',
+'PR_Date',
 'PO_JO',
+'PO_JO_Date',
+'cat',
 'program_proj_name',
 'end_user',
 'mode',
@@ -41,7 +45,9 @@ field_keys = ['ptype','code_PAP',
 'DRP_Notice_of_Award',
 'DRP_Contract_Signing',
 'DRP_Delivery_Accept',
-'Remarks']
+'Remarks',
+'Supplier'
+]
 
 
    return {

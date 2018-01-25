@@ -50,6 +50,15 @@ app.post('/save_update',function(req,res,next){
 
 });
 
+app.post('/delete_proc',function(req,res,next){
+        alldata = {id:req.body.id}
+        model.delete_procurement(alldata,function(data){
+            
+                res.send(data);
+        });
+
+});
+
 app.post('/get_total',function(req,res,next){
         from = req.body.from;
         to = req.body.to;
@@ -66,9 +75,48 @@ app.post('/generate_excel',function(req,res,next){
        /* original data */
                 input = req.body
                 model.excel_data(input,function(data2){
-             
 
-                var data = data2
+               Header = [{
+                            code_PAP: 'Code (PAP)',
+                            pr_no: 'PR #',
+                            PO_JO: 'PO/JO #',
+                            program_proj_name: 'Procurement Program/Project',
+                            end_user: 'PMO/End-User',
+                            Mode:  'Mode of Procurement',
+                            pre_Proc: 'Pre-Proc Conference',
+                            ads_post_IAEB: 'Ads/Post of IAEB',
+                            Pre_bid: 'Pre-bid Conf',
+                            Eligibility_Check: 'Eligibility Check',
+                            oob: 'Sub/Open of Bids',
+                            Bid_Eval: 'Bid Evaluation',
+                            Post_Qual: 'Post Qual',
+                            Notice_of_Award: 'Notice of Award',
+                            Contract_Signing: 'Contract Signing',
+                            Notice_To_Proceed: 'Notice to Proceed',
+                            Del_Completion: 'Delivery/ Completion',
+                            Acceptance_date: 'Acceptance/ Turnover',
+                            Source_of_Funds: 'Source of Funds',
+                            ABC: 'Total',
+                            ABC_MOOE: 'MOOE',
+                            ABC_CO: 'CO',
+                            ABC_Others: 'Others',
+                            Contract_Cost: 'Total',
+                            Contract_Cost_MOOE: 'MOOE',
+                            Contract_Cost_CO: 'CO',
+                            Contract_Cost_Others: 'Others',
+                            Invited_Observers: 'List of Invited Observers',
+                            DRP_Pre_Proc_conf: 'Pre-Proc Conf',
+                            DRP_Pre_Bid_conf: 'Pre-bid Conf',
+                            DRP_Eligibility_check: 'Eligibility Check',
+                            DRP_OOP: 'Sub/Open of Bids',
+                            DRP_Bid_Eval: 'Bid Evaluation',
+                            DRP_Post_Qual: 'Post Qual',
+                            DRP_Notice_of_Award: 'Notice of Award',
+                            DRP_Contract_Signing:'Contract Signing',
+                            DRP_Delivery_Accept: 'Delivery/ Accept',
+                            Remarks: 'Remarks' }
+                            ]    
+                var data = Header.concat(data2)
                 var ws_name = "SheetJS";
 
                 /* require XLSX */
@@ -100,7 +148,7 @@ app.post('/generate_excel',function(req,res,next){
                         if(key=="id") continue
                         /* create the correct cell reference */
                         var cell_ref = XLSX.utils.encode_cell({c:C,r:R});
-
+							//console.log(cell_ref)
                         /* determine the cell type */
                         if(typeof cell.v === 'number') cell.t = 'n';
                         else if(typeof cell.v === 'boolean') cell.t = 'b';

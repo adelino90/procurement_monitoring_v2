@@ -271,7 +271,9 @@ initModule = function ( $container ) {
 
 
 	stateMap.$container = $container;
+	
 	$container.html( configMap.main_html );
+
 	setJqueryMap();
 	// initialize chat slider and bind click handler
 

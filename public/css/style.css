@@ -123,3 +123,13 @@ th, td {
     opacity: 0.5;
       width: 3400px;
 }
+#Supplier{
+margin-bottom: 10px;
+}
+.no_cat{
+    background: #8DBFFA;
+}
+.but-space{
+    margin:3px; 
+    padding:10px;
+}

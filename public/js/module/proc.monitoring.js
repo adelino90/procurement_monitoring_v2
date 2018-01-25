@@ -12,8 +12,8 @@ configMap = {
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined ,procurement_model : undefined},
 jqueryMap = {},
-copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents, 
-data_filter,set_modal_values,clear_vals,getVals,validate,clear_events,
+copyAnchorMap,setJqueryMap,configModule,onClickChat,setcontent,helper, getDate,setEvents,check_date_range,
+data_filter,set_modal_values,clear_vals,Date_caclulate,convert_to_date,getVals,proc_del,confirm_delete,validate,clear_events,
 refresh_total, initModule;
 
 // Begin DOM method /setJqueryMap/
@@ -23,10 +23,12 @@ setJqueryMap = function () {
 	jqueryMap = {
             $content : $container,
             $modal   : $modal,
+            $for_bidding : $modal.find("#for_bidding"),
             $record_table : $container.find("#record_table"),
             $modal_close  : $container.find('.close'),
             $procurement_close : $modal.find("#procurement_cancel"),
             $procurement_save : $modal.find("#procurement_save"),
+            $procurement_delete : $modal.find("#procurement_delete"),
             $date_modal : $date_modal,
             $from : $container.find("#from"),
             $to : $container.find("#to"),
@@ -36,8 +38,12 @@ setJqueryMap = function () {
             $search :   $container.find("#search"),
             $generate : $container.find("#generate"),
             $code_PAP : $modal.find('#code_PAP'),
-			$pr_no : $modal.find('#pr_no'),
-			$PO_JO  :$modal.find('#PO_JO'),
+            $pr_no : $modal.find('#pr_no'),
+            $PR_Date : $modal.find('#PR_Date'),
+            $PO_JO  :$modal.find('#PO_JO'),
+            $PO_JO_Date  :$modal.find('#PO_JO_Date'),
+            $PR_to_PO :  $modal.find('#PR_to_PO'),
+            $category  :$modal.find('#cat'),
 			$program_proj_name  :$modal.find('#program_proj_name'),
 			$end_user  : $modal.find('#end_user'),
 			$MOP  : $modal.find('#mode'),
@@ -61,7 +67,8 @@ setJqueryMap = function () {
 			$Contract_Cost  : $modal.find('#Contract_Cost'),
 			$Contract_Cost_MOOE : $modal.find('#Contract_Cost_MOOE'),
 			$Contract_Cost_CO : $modal.find('#Contract_Cost_CO'),
-			$Contract_Cost_Others  : $modal.find('#Contract_Cost_Others'),
+            $Contract_Cost_Others  : $modal.find('#Contract_Cost_Others'),
+            $supplier : $modal.find('#Supplier'),
 			$Invited_Observers  : $modal.find('#Invited_Observers'),
 			$DRP_Pre_Proc_conf  : $modal.find('#DRP_Pre_Proc_conf'),
 			$DRP_Pre_Bid_conf  :  $modal.find('#DRP_Pre_Bid_conf'),
@@ -78,11 +85,40 @@ setJqueryMap = function () {
             $PB_C_COST_TOTAL : $container.find("#PB_C_COST_TOTAL"),
             $ALT_ABC_TOTAL : $container.find("#ALT_ABC_TOTAL"),
             $ALT_C_COST_TOTAL : $container.find("#ALT_C_COST_TOTAL")
+            
 		}
 };
 
-validate = function(){
+validate = function(data){
+    var datacheck = data.idata
+    var check_obj = {message:"",flag:true};
 
+    if(!datacheck.ptype){
+        check_obj.flag = false;
+        check_obj.message = check_obj.message+"Please Select A Procurement Type";
+    }
+        if(datacheck.ptype=="1"){
+            if(datacheck.PR_Date==""){
+                check_obj.flag = false;
+                check_obj.message = check_obj.message+"\nPlease Set The PR Date";
+            }
+            if(datacheck.pr_no==""){
+                check_obj.flag = false; 
+                check_obj.message = check_obj.message+"\nPlease Set The PR Number";
+            }
+            if(!datacheck.cat){
+                check_obj.flag = false; 
+                check_obj.message = check_obj.message+"\nPlease Set The Procurement Category";
+            }
+        }
+        
+        else if(datacheck.ptype=="2"){
+                if(datacheck.program_proj_name==""){
+                    check_obj.flag = false;
+                    check_obj.message = check_obj.message+"\nPlease Set The Program Name";
+            }
+        }
+    return check_obj
 }
 refresh_total = function(ptype){
      var from_date =  jqueryMap.$from.text();
@@ -103,29 +139,72 @@ refresh_total = function(ptype){
             }
         })
 }
+
+confirm_delete = function() {
+    var inputdata,id = jqueryMap.$procurement_delete.attr("save_id"), procurement_type = jqueryMap.$procurement_save.attr("procurement_type");
+    var row_id = jqueryMap.$procurement_save.attr('save_id');
+    inputdata = {id:id,ptype:procurement_type};
+    configMap.proc_model.delete_proc(inputdata,function(data){
+               $(".overlay").hide();
+               refresh_total(inputdata.ptype);    
+               clear_vals() 
+               jqueryMap.$procurement_save.off();
+               jqueryMap.$procurement_delete.off();
+               $('#myModal').css("display","none");
+               $('tr[data-id="'+row_id+'"]').remove()
+               setEvents()
+
+            })  
+}
+proc_del = function(){
+var C = confirm("Are you sure you wan't to delete this?");
+    if (C == true) {
+       confirm_delete()
+    } else {
+        
+    }
+    
+}
+check_date_range = function(date_to_check,from,to){
+   var date_to_check = new Date(date_to_check);
+   var from = new Date(from);
+   var to = new Date(to);
+   var flag = true;
+   if(date_to_check < from || date_to_check > to)
+        flag = false
+   return flag
+} 
+
+
 getVals = function(){
     $(".overlay").show();
     var idata = {};
+    var from =jqueryMap.$from.text(),to = jqueryMap.$to.text();;
     var inputdata, save_date,save_type = jqueryMap.$procurement_save.attr("save_type"), procurement_type = jqueryMap.$procurement_save.attr("procurement_type");
     for(var i=0;i < configMap.keys.length;i++){
-
-        
         idata[configMap.keys[i]] = $('#'+configMap.keys[i]).val()
     }
+    var date_in_range = check_date_range(idata.PR_Date,moment(from).format('L'),moment(to).format('L'))
+    save_date =  jqueryMap.$from.text();
     idata.mode = (idata.mode==null ? 0 : idata.mode)
     idata.fund = (idata.fund==null ? 0 : idata.fund)
+    idata.cat = (idata.cat==null ? 0 : idata.cat)
     save_date =  jqueryMap.$from.text();
     save_date = moment(save_date).format('L');
     idata.save_date = save_date
     inputdata = {idata:idata};
-    if(jqueryMap.$ptype.val()){
+    var valid = validate(inputdata);
+    if(valid.flag){
         if(save_type==1){
             configMap.proc_model.save(inputdata,function(data){
                 if(idata.ptype == 2){
-                    $( data ).insertBefore( "#total_pbid" );
+                    if(date_in_range)
+                        $( data ).insertBefore( "#total_pbid" );
                 }
                 else{
-                    $( data ).insertBefore( "#total_altmode" );
+                    if(date_in_range)
+                        $( data ).insertBefore( "#total_altmode" );
+                
                 }
 
                $(".overlay").hide();
@@ -142,16 +221,15 @@ getVals = function(){
         else{
             var row_id = jqueryMap.$procurement_save.attr('save_id');
             inputdata.idata.id = row_id
-           
             configMap.proc_model.save_update(inputdata,function(data){
                 clear_vals()
                 alert("UPDATED")
                 $(".overlay").hide();
                 $('.cell_hover').replaceWith(data)
                 $('#myModal').css("display","none");
-                if(procurement_type==idata.ptype)
+                if(procurement_type==idata.ptype)   // If Procurement type is not changed
                     $('tr[data-id="'+row_id+'"]').replaceWith(data)
-                else{
+                else{ // If Procurement type is changed
 
                     $('tr[data-id="'+row_id+'"]').remove()
                     if(idata.ptype == 2){
@@ -184,10 +262,11 @@ getVals = function(){
                 refresh_total(idata.ptype);  
             });
 
-        }    
+        }   
+        jqueryMap.$for_bidding.find('input').attr("disabled", false); 
     }
     else{
-        alert("Please Select A Procurement Type")
+        alert(valid.message)
         $(".overlay").hide();
     }
 
@@ -207,9 +286,13 @@ data_filter = function(date_from,date_to,search_str){
     })
 }
 clear_vals = function(){
+            $(".modal-content").scrollTop(0) 
             jqueryMap.$code_PAP.val("") 
-			jqueryMap.$pr_no.val("")  
-			jqueryMap.$PO_JO.val("")   
+            jqueryMap.$pr_no.val("")  
+            jqueryMap.$PR_Date.val("") 
+            jqueryMap.$PO_JO.val("")   
+            jqueryMap.$PO_JO_Date.val("") 
+            jqueryMap.$category.val(-1) 
 			jqueryMap.$program_proj_name.val("")   
 			jqueryMap.$end_user.val("")   
 			jqueryMap.$MOP.val(-1)  
@@ -245,7 +328,9 @@ clear_vals = function(){
 			jqueryMap.$DRP_Contract_Signing.val("") 
 			jqueryMap.$DRP_Delivery_Accept.val("") 
 			jqueryMap.$Remarks .val("") 
-			jqueryMap.$ptype .val(-1) 
+            jqueryMap.$ptype .val(-1) 
+            jqueryMap.$supplier.val("")
+            jqueryMap.$PR_to_PO.text("");
 }
 getDate = function(){
     var d = new Date();
@@ -259,9 +344,13 @@ getDate = function(){
 set_modal_values = function(id){
     
     configMap.proc_model.view_proc({id:id},function(data){
+
             jqueryMap.$code_PAP.val(data.code_PAP) 
-			jqueryMap.$pr_no.val(data.pr_no)  
-			jqueryMap.$PO_JO.val(data.PO_JO)   
+            jqueryMap.$pr_no.val(data.pr_no)  
+            jqueryMap.$PR_Date .val(data.PR_Date)  
+            jqueryMap.$PO_JO.val(data.PO_JO)   
+            jqueryMap.$PO_JO_Date.val(data.PO_JO_Date)   
+            jqueryMap.$category.val(data.cat_id)
 			jqueryMap.$program_proj_name.val(data.program_proj_name)   
 			jqueryMap.$end_user.val(data.end_user)   
 			jqueryMap.$MOP.val(data.MOP_id)  
@@ -300,7 +389,18 @@ set_modal_values = function(id){
 			jqueryMap.$ptype .val(data.ptype_id) 
             jqueryMap.$procurement_save.attr("save_type", "2");
             jqueryMap.$procurement_save.attr("save_id", id);
+            jqueryMap.$procurement_delete.attr("save_id", id);
             jqueryMap.$procurement_save.attr("procurement_type", data.ptype_id);
+            jqueryMap.$supplier.val(data.winning_supplier)
+
+            var pr_to_po = Date_caclulate(data.PR_Date,data.PO_JO_Date)
+            var ptype = jqueryMap.$ptype.val();
+            jqueryMap.$PR_to_PO.text(pr_to_po);
+             
+            if(ptype ==2)
+                jqueryMap.$for_bidding.find('input').attr("disabled", false);
+            else
+                jqueryMap.$for_bidding.find('input').attr("disabled", true);
 
     })
 }
@@ -337,22 +437,40 @@ setEvents = function(from,to,search_str){
         }
 
     });
+    jqueryMap.$ptype.change(function(){
+        var ptype = jqueryMap.$ptype.val();
+        if(ptype ==2)
+            jqueryMap.$for_bidding.find('input').attr("disabled", false);
+        else{
+             jqueryMap.$for_bidding.find('input').attr("disabled", true);
+             jqueryMap.$for_bidding.find('input').val("")
+            }
+    })
     // When the user clicks on <span> (x), close the modal
     jqueryMap.$modal_close.click(function() {
+        $(".modal-content").scrollTop(0) 
         $('#myModal').css("display","none");
         jqueryMap.$date_modal.css("display","none");
+        
     })
     jqueryMap.$procurement_close.click(function(){
+        $(".modal-content").scrollTop(0) 
          $('#myModal').css("display","none");
          jqueryMap.$date_modal.css("display","none");
+         jqueryMap.$for_bidding.find('input').attr("disabled", false);
+         
     })
     jqueryMap.$procurement_save.click(function(){
-      
          getVals();
+         
+    })
+    jqueryMap.$procurement_delete.click(function(){
+         proc_del();
+         
     })
     jqueryMap.$from.click(function(){
-        jqueryMap.$date_modal.css("display","block");
-        var date =  jqueryMap.$from.text();
+      jqueryMap.$date_modal.css("display","block");
+      var date =  jqueryMap.$from.text();
       date = new Date(date)
       $("#input_date").val(moment(date).format('L'));
        $("#date_save").attr('data-id','from');
@@ -374,7 +492,7 @@ setEvents = function(from,to,search_str){
 
     })
     jqueryMap.$procurement_add.click(function() {
-
+        jqueryMap.$for_bidding.find('input').attr("disabled", false);
         clear_vals();
         jqueryMap.$procurement_save.attr("save_type", "1");
         jqueryMap.$procurement_save.removeAttr("save_id");
@@ -450,12 +568,10 @@ setcontent = function(from,to,search_str,$container){
                 stateMap.$container.html(Handlebars.templates.monitoring())
                     var from_Text = new Date(from);
                     var to_Text = new Date(to);
-                    
-
                     jqueryMap.$search.val(search_str);
                     $container.off().empty();
                     stateMap.$container = $container;
-                    stateMap.$container.html(Handlebars.templates.monitoring({ptype:data.ptype,source_of_fund:data.source_of_fund,modes:data.modes}));
+                    stateMap.$container.html(Handlebars.templates.monitoring({ptype:data.ptype,source_of_fund:data.source_of_fund,modes:data.modes,category:data.category}));
                     setJqueryMap();
                     jqueryMap.$search.val(search_str);  
                     jqueryMap.$from.text(moment(from_Text).format('LL'));
@@ -467,6 +583,56 @@ setcontent = function(from,to,search_str,$container){
          
 
 }
+
+
+
+Date_caclulate = function(from,to){
+var holidays = 
+[
+	'01/01/2017','01/02/2017','01/28/2017'
+	,'02/25/2017','03/20/2017','04/09/2017'
+	,'04/13/2017','04/14/2017','04/16/2017'
+	,'04/24/2017','05/01/2017','06/12/2017'
+	,'06/21/2017','06/27/2017','08/21/2017'
+	,'08/28/2017','09/02/2017','09/03/2017'
+	,'09/22/2017','10/31/2017','11/01/2017'
+	,'11/13/2017','11/14/2017','11/15/2017'
+	,'11/30/2017','12/01/2017'
+	,'12/08/2017','12/21/2017','12/24/2017'
+	,'12/25/2017','12/30/2017','12/31/2017'
+
+];
+holidays = convert_to_date(holidays);
+
+		
+	var start = new Date(from),
+		finish = new Date(to),
+		dayMilliseconds = 1000 * 60 * 60 * 24;
+	var sday = start
+	var weekDays = 0;
+
+	while (start <= finish) {
+		var day = start.getDay()
+		
+		
+		if ((day == 1 || day == 2 || day == 3  || day == 4  || day == 5) && (holidays.indexOf(start.getTime()) == -1)) {
+			weekDays++;
+		}
+		start = new Date(+start + dayMilliseconds);
+		
+	}
+
+	weekDays = ((holidays.indexOf(finish.getTime()) == -1 && sday.getDay() != 0 && sday.getDay() != 6 ) ? weekDays -1 : weekDays)
+	return weekDays
+}
+convert_to_date = function(dates){
+	for(var i=0;i<dates.length;i++){
+		dates[i] =  new Date(dates[i]).getTime();
+	}
+	return dates;
+
+}
+
 
 
 

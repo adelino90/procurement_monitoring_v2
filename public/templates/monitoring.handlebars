@@ -81,12 +81,32 @@
                     <input type="text" class="form-control" id="pr_no"  >
                   </div>
                   <div class="form-group">
+                    <label>PR Date:</label>
+                          <input class="datepicker form-control" id="PR_Date"  data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                  </div>
+                  <div class="form-group">
                     <label>PO/JO #:</label>
                     <input type="text" class="form-control" id="PO_JO" >
                   </div>
                   <div class="form-group">
+                    <label>PO/JO Date:</label>
+                          <input class="datepicker form-control" id="PO_JO_Date"  data-date-format="MM/DD/YYYY"  placeholder="MM/DD/YYYY">
+                  </div>
+                  <p>No. of days from PR to issuance  PO : <b><span id="PR_to_PO"></span></b></p>    
+                  
+                  <div class="form-group">
                     <label>Procurement Program/Project:</label>
                     <textarea class="form-control" rows="5" id="program_proj_name"></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label>Purchase Category:</label>
+                    <select class="form-control" id="cat">
+            
+                        <option disabled selected value> -- select an option -- </option>
+                         {{#each category}}
+                                    <option  value = "{{category_id}}"><b>{{category_description}}</b></option>
+                         {{/each}} 
+                    </select>
                   </div>
                   <div class="form-group">
                       <label>Mode of Procurement:</label>
@@ -210,12 +230,16 @@
                         <input type="number" class="form-control copy_concost" id="Contract_Cost_Others">
                       </div>
                    </div>
+                   <div class="col-md-12 border">
+                        <label>	Winning Supplier</label>
+                        <input type="text" class="form-control copy_concost" id="Supplier">
+                   </div>
                    <div class="form-group">
                     <label>List of Invited Observers:</label>
                     <textarea class="form-control" rows="5" id="Invited_Observers"></textarea>
                   </div>
 
-                  <div class="col-md-12 border">
+                  <div class="col-md-12 border" id="for_bidding">
                     <p class="thick">Date of Receipt of Invitation</p>
                     <div class="col-md-6  form-group">
                           <label>Pre-Proc Conferenc:</label>
@@ -261,8 +285,10 @@
                     <label>Remarks:</label>
                     <textarea class="form-control" rows="5" id="Remarks">  </textarea>
                   </div>
-                  <button type="button" class="btn btn-info col-md-6" id = "procurement_save" >Save</button>
-				  <button type="button" class="btn btn-info col-md-6 btn-warning" id = "procurement_cancel">Cancel</button>
+                  <button type="button" class="btn btn-info col-md-3 col-md-offset-1 but-space" id = "procurement_save" >Save</button>
+                  <button type="button" class="btn btn-info col-md-3 btn-danger but-space" id = "procurement_delete">Delete</button>
+				          <button type="button" class="btn btn-info col-md-3 btn-warning but-space" id = "procurement_cancel">Cancel</button>
+          
 					 
               </div>
              
