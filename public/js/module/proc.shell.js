@@ -28,7 +28,7 @@ configMap = {
 },
 stateMap = {$container : undefined, anchor_map : {} ,resize_idto : undefined},
 jqueryMap = {},
-initModule,copyAnchorMap,setJqueryMap, changeAnchorPart, onHashchange, setOptionAnchor,setfilterOptionAnchor;
+initModule,copyAnchorMap,setJqueryMap, changeAnchorPart,randomScalingFactor, onHashchange, setOptionAnchor,setfilterOptionAnchor;
 //----------------- END MODULE SCOPE VARIABLES ---------------
 //-------------------- BEGIN UTILITY METHODS -----------------
 //--------------------- END UTILITY METHODS ------------------
@@ -240,7 +240,9 @@ onHashchange = function ( event ) {
   setOptionAnchor = function ( option, id, id2, id3) {
     return changeAnchorPart({ option : option, _option : { id : id, id2 : id2 ,id3 : id3} });
   };
-
+  randomScalingFactor = function() {
+		return Math.round(Math.random() * 100);
+  };
 
 // End callback method /setChatAnchor/
 //----------------------- END CALLBACKS ----------------------
@@ -273,7 +275,41 @@ initModule = function ( $container ) {
 	stateMap.$container = $container;
 	
 	$container.html( configMap.main_html );
-
+	proc.model.monitoring.mode_of_proc_graph({},function(response){
+		var ctx = document.getElementById("chart-area").getContext("2d");
+		window.myPie = new Chart(ctx, response);
+	})  
+	 proc.model.monitoring.get_Supplier_filter_graph({},function(response){
+       var color = Chart.helpers.color;
+       response.datasets[0].label = 'Supplier'   
+       response.datasets[0].backgroundColor= color(window.chartColors.red).alpha(0.5).rgbString()     
+       response.datasets[0].borderColor= window.chartColors.red
+       response.datasets[0].borderWidth= 1
+       var ctx = document.getElementById("supplier_graph").getContext("2d");
+       window.myHorizontalBar = new Chart(ctx, {
+                type: 'line',
+                data: response,
+                options: {
+                    // Elements options apply to all of the options unless overridden in a dataset
+                    // In this case, we are setting the border of each horizontal bar to be 2px wide
+                    elements: {
+                        rectangle: {
+                            borderWidth: 2,
+                        }
+                    },
+                    responsive: true,
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Chart.js Horizontal Bar Chart'
+                    }
+                }
+			});
+		$("#Supplier_Tbody").html(response.tbl_html) 	
+			
+    })  
 	setJqueryMap();
 	// initialize chat slider and bind click handler
 
@@ -286,8 +322,9 @@ initModule = function ( $container ) {
 	schema_map : configMap.anchor_schema_map
 	});
 
-	proc.monitoring.configModule({
-	  change_option_anchor:setOptionAnchor
+	proc.dashboard.configModule({
+	  change_option_anchor:setOptionAnchor,
+		procurement_model : proc.model.monitoring,
 	});
 	proc.monitoring.configModule({
 	  change_option_anchor:setOptionAnchor,

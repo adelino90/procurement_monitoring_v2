@@ -227,9 +227,9 @@ getVals = function(){
                 $(".overlay").hide();
                 $('.cell_hover').replaceWith(data)
                 $('#myModal').css("display","none");
-                if(procurement_type==idata.ptype)   // If Procurement type is not changed
+                if(procurement_type==idata.ptype)                       // If Procurement type is not changed
                     $('tr[data-id="'+row_id+'"]').replaceWith(data)
-                else{ // If Procurement type is changed
+                else{                                                   // If Procurement type is changed
 
                     $('tr[data-id="'+row_id+'"]').remove()
                     if(idata.ptype == 2){
@@ -328,7 +328,7 @@ clear_vals = function(){
 			jqueryMap.$DRP_Contract_Signing.val("") 
 			jqueryMap.$DRP_Delivery_Accept.val("") 
 			jqueryMap.$Remarks .val("") 
-            jqueryMap.$ptype .val(-1) 
+            jqueryMap.$ptype.val("1")
             jqueryMap.$supplier.val("")
             jqueryMap.$PR_to_PO.text("");
 }
@@ -477,9 +477,10 @@ setEvents = function(from,to,search_str){
 
     })
     jqueryMap.$generate.click(function(){
-
+        var from_d = jqueryMap.$from.text();
+        var to_d = jqueryMap.$to.text();
           configMap.proc_model.generate({from:from,to:to,search_str:search_str},function(response){
-              window.location ="/get_excel"
+               window.location.assign('/procurement_monitoring/'+from_d+'/'+to_d+'')
           })
     })
     jqueryMap.$to.click(function(){
@@ -577,6 +578,7 @@ setcontent = function(from,to,search_str,$container){
                     jqueryMap.$from.text(moment(from_Text).format('LL'));
                     jqueryMap.$to.text(moment(to_Text).format('LL'));
                     data_filter(from,to,search_str)
+                    
                
              })
     

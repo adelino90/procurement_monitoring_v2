@@ -3,7 +3,7 @@
     "user": "sa",
     "password": "server",
     "server": "127.0.0.1",
-    "database": "APP",
+    "database": "Procurement_Monitoring",
     "port":1433,
      "pool": {
         "max": 10,

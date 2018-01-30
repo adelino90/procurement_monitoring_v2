@@ -133,3 +133,6 @@ margin-bottom: 10px;
     margin:3px; 
     padding:10px;
 }
+#Supplier_Tbody > tr,#Supplier_Table > thead > tr > th{
+   font-size: 12px;
+}

@@ -28,9 +28,15 @@ app.post('/view_procurement',function(req,res,next){
               })
  })
 
-app.get('/get_excel',function(req,res){
+app.get('/procurement_monitoring/:datefron/:dateto',function(req,res){
+    /*var filePath = path.join(__dirname, '/../','public/test.xlsx');
+    var file = fs.readFile(filePath, 'binary');
 
-    res.sendFile(path.join(__dirname, '/../','public/test.xlsx'));
+    res.setHeader('Content-Type', 'xlsx');
+    res.setHeader('Content-Disposition', 'attachment; filename=test.xlsx');
+    res.write(file, 'binary');
+    res.end();*/
+   res.sendFile(path.join(__dirname, '/../','public/test.xlsx'));
 })
 app.post('/save',function(req,res,next){
         alldata= req.body.idata
@@ -59,6 +65,23 @@ app.post('/delete_proc',function(req,res,next){
 
 });
 
+app.post('/mode_of_proc_graph',function(req,res,next){
+        alldata = {}
+        model.mode_of_proc_graph(alldata,function(data){
+            
+                res.send(data);
+        });
+
+});
+
+app.post('/get_Supplier_filter_graph',function(req,res,next){
+        alldata = {}
+        model.get_Supplier_filter_graph(alldata,function(data){
+            
+                res.send(data);
+        });
+
+});
 app.post('/get_total',function(req,res,next){
         from = req.body.from;
         to = req.body.to;

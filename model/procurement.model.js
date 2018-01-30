@@ -941,6 +941,125 @@ save_data = function(input_data,callback){
           
 			})
 }
+
+mode_of_proc_graph = function(input_data,callback){
+    
+    var dates = getDate();
+    var datefrom = new Date(dates[0])
+    var dateto = new Date(dates[1])
+    from = moment(datefrom).format('LL')
+    to = moment(dateto).format('LL')
+  
+        sql.close();
+    	 const request = new sql.Request(gpool)
+            .input('from', sql.NVarChar, from)
+            .input('to', sql.NVarChar, to)
+            .execute('get_Mode_Filter', (err, result) => {
+                var data =  {
+                                type: 'pie',
+                                data: {
+                                    datasets: [{
+                                        data: initialize_graphdata(result.recordset),
+                                    backgroundColor: initialize_graphdatacolor(result.recordset),
+                                        label: 'Dataset 1'
+                                    }],
+                                    labels: initialize_graphdatalabel(result.recordset),
+                                },
+                                options: {
+                                    responsive: true
+                                }
+                            };
+                               callback(data)
+
+             })
+                     
+                 
+
+}
+
+
+get_Supplier_filter_graph = function(input_data,callback){
+    var dates = getDate();
+    var datefrom = new Date(dates[0])
+    var dateto = new Date(dates[1])
+    from = moment(datefrom).format('LL')
+    to = moment(dateto).format('LL')
+        sql.close();
+    	 const request = new sql.Request(gpool)
+            .input('from', sql.NVarChar, from)
+            .input('to', sql.NVarChar, to)
+            .execute('get_Supplier_filter', (err, result) => {
+                 var barChartData = {
+                                        labels:  initialize_graphdatalabel(result.recordset),
+                                        datasets: [{
+                                            data: initialize_graphdata(result.recordset)
+                                        }],
+                                        tbl_html:setsupplier_tbl_html(result.recordset)
+                                    };
+
+
+                               callback(barChartData)
+
+             })
+                     
+                 
+
+}
+
+function setsupplier_tbl_html(data){
+var html='';
+  for(i=0;i<data.length;i++){
+      html = html+'<tr>'
+      html = html+'<td>'+data[i].Label+'</td>'
+      html = html+'<td>'+data[i].Count+'</td>'
+      html = html+'</tr>'  
+    }
+    return html;
+}
+function initialize_graphdata(data){
+    var Newdata=[];
+    for(i=0;i<data.length;i++){
+        Newdata[i]=data[i].Count
+
+    }
+
+    return Newdata;
+}
+
+function initialize_graphdatacolor(data){
+    var Newdata=[];
+    for(i=0;i<data.length;i++){
+        Newdata[i] = getRandomColor()
+
+    }
+
+    return Newdata;
+}
+function initialize_graphdatalabel(data){
+    var Newdata=[];
+    for(i=0;i<data.length;i++){
+        Newdata[i]=data[i].Label
+
+    }
+
+    return Newdata;
+}
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+
+
+function setRandomColor() {
+  $("#colorpad").css("background-color", getRandomColor());
+}
+
+
 checkIfisNaN = function(value){
     if(isNaN(parseFloat(value))==true){
         return '';
@@ -1032,4 +1151,6 @@ convert_to_date = function(dates){
           exports.save_data  = save_data;
           exports.get_total = get_total;
           exports.save_update_data = save_update_data;
-          exports.delete_procurement = delete_procurement
+          exports.delete_procurement = delete_procurement;
+          exports.mode_of_proc_graph = mode_of_proc_graph;
+          exports.get_Supplier_filter_graph = get_Supplier_filter_graph;
