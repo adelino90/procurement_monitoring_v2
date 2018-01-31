@@ -65,6 +65,23 @@ app.post('/delete_proc',function(req,res,next){
 
 });
 
+app.post('/get_source_of_fund_filter_graph',function(req,res,next){
+        alldata = {}
+        model.get_source_of_fund_filter_graph(alldata,function(data){
+            
+                res.send(data);
+        });
+
+})
+
+app.post('/Pr_Per_Month',function(req,res,next){
+        alldata = {}
+        model.Pr_Per_Month(alldata,function(data){
+            
+                res.send(data);
+        });
+
+})
 app.post('/mode_of_proc_graph',function(req,res,next){
         alldata = {}
         model.mode_of_proc_graph(alldata,function(data){

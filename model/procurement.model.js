@@ -977,6 +977,41 @@ mode_of_proc_graph = function(input_data,callback){
 
 }
 
+Pr_Per_Month = function(input_data,callback){
+    
+    var dates = getDate();
+    var datefrom = new Date(dates[0])
+    var dateto = new Date(dates[1])
+    from = moment(datefrom).format('LL')
+    to = moment(dateto).format('LL')
+  
+         sql.close();
+    	 const request = new sql.Request(gpool)
+            .input('SDate', sql.NVarChar, from)
+            .input('EDate', sql.NVarChar, to)
+            .execute('Pr_Per_Month', (err, result) => {
+
+                                var config = {
+                                    type: 'line',
+                                    data: {
+                                        labels: initialize_graphdatalabel(result.recordset),
+                                        datasets: [{
+                                            label: " Purchase Requests",
+                                            fill: false,
+                                            borderColor: "#A24454",
+                                            backgroundColor: "#A24454",
+                                            data: initialize_graphdata(result.recordset)
+                                        }]
+                                    }
+                                    
+                                };
+                               callback(config);
+
+             })
+                     
+                 
+
+}
 
 get_Supplier_filter_graph = function(input_data,callback){
     var dates = getDate();
@@ -999,6 +1034,42 @@ get_Supplier_filter_graph = function(input_data,callback){
 
 
                                callback(barChartData)
+
+             })
+                     
+                 
+
+}
+
+
+get_source_of_fund_filter_graph = function(input_data,callback){
+    var dates = getDate();
+    var datefrom = new Date(dates[0])
+    var dateto = new Date(dates[1])
+    from = moment(datefrom).format('LL')
+    to = moment(dateto).format('LL')
+        sql.close();
+    	 const request = new sql.Request(gpool)
+            .input('from', sql.NVarChar, from)
+            .input('to', sql.NVarChar, to)
+            .execute('source_of_funds_filter', (err, result) => {
+                   var data =  {
+                                type: 'pie',
+                                data: {
+                                    datasets: [{
+                                        data: initialize_graphdata(result.recordset),
+                                    backgroundColor: initialize_graphdatacolor(result.recordset),
+                                        label: 'Dataset 1'
+                                    }],
+                                    labels: initialize_graphdatalabel(result.recordset),
+                                },
+                                options: {
+                                    responsive: true
+                                }
+                            };
+
+
+                               callback(data)
 
              })
                      
@@ -1154,3 +1225,5 @@ convert_to_date = function(dates){
           exports.delete_procurement = delete_procurement;
           exports.mode_of_proc_graph = mode_of_proc_graph;
           exports.get_Supplier_filter_graph = get_Supplier_filter_graph;
+          exports.get_source_of_fund_filter_graph = get_source_of_fund_filter_graph;
+          exports.Pr_Per_Month = Pr_Per_Month;

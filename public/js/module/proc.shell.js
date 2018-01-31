@@ -276,9 +276,13 @@ initModule = function ( $container ) {
 	
 	$container.html( configMap.main_html );
 	proc.model.monitoring.mode_of_proc_graph({},function(response){
-		var ctx = document.getElementById("chart-area").getContext("2d");
-		window.myPie = new Chart(ctx, response);
+	   var ctx = document.getElementById("chart-area").getContext("2d");
+	   window.myPie = new Chart(ctx, response);
 	})  
+	proc.model.monitoring.get_source_of_fund_filter_graph({},function(response){
+       var ctx = document.getElementById("source").getContext("2d");
+       window.myPie = new Chart(ctx, response);
+    })  
 	 proc.model.monitoring.get_Supplier_filter_graph({},function(response){
        var color = Chart.helpers.color;
        response.datasets[0].label = 'Supplier'   
@@ -309,7 +313,30 @@ initModule = function ( $container ) {
 			});
 		$("#Supplier_Tbody").html(response.tbl_html) 	
 			
-    })  
+	})  
+	 proc.model.monitoring.Pr_Per_Month({},function(response){
+        var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var progress = document.getElementById('animationProgress');
+        response.options = {
+                            title:{
+                                display:true,
+                                text: "Numbers Of PRs Per month"
+                            },
+                            animation: {
+                                duration: 2000,
+                                onProgress: function(animation) {
+                                    progress.value = animation.currentStep / animation.numSteps;
+                                },
+                                onComplete: function(animation) {
+                                    window.setTimeout(function() {
+                                        progress.value = 0;
+                                    }, 2000);
+                                }
+                            }
+                        }
+        var ctx = document.getElementById("Pr_Progress").getContext("2d");
+        window.myLine = new Chart(ctx, response);
+    }) 
 	setJqueryMap();
 	// initialize chat slider and bind click handler
 
